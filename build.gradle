@@ -1,0 +1,91 @@
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'org.jetbrains.intellij' version '0.4.15'
+    id 'org.gretty' version '3.0.1'
+    id 'war'
+    id 'checkstyle'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+ext {
+    checkstyleVersion = '8.11'
+}
+checkstyle {
+    sourceSets = []
+    toolVersion = checkstyleVersion
+    config = rootProject.resources.text.fromFile('etc/checkstyle/rules.xml')
+}
+task checkstyle {
+    dependsOn 'checkstyleMain'
+    dependsOn 'checkstyleTest'
+    tasks.findByName('checkstyleTest').mustRunAfter 'checkstyleMain'
+}
+
+repositories {
+    // Use jcenter for resolving dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    jcenter()
+    mavenCentral()
+}
+
+
+
+
+dependencies {
+    // This dependency is exported to consumers, that is to say found on their compile classpath.
+    api 'org.apache.commons:commons-math3:3.6.1'
+
+    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
+    implementation 'com.google.guava:guava:27.1-jre'
+
+// https://mvnrepository.com/artifact/com.opencsv/opencsv
+    compile group: 'com.opencsv', name: 'opencsv', version: '4.5'
+
+    // Javax Activation
+    compile group: 'com.sun.activation', name: 'javax.activation', version: '1.2.0'
+
+    // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
+    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+
+
+// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.6'
+// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.6'
+// https://mvnrepository.com/artifact/org.codehaus.jackson/jackson-mapper-asl
+    compile group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'
+
+    // Logger
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.1'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.1'
+
+    // Use TestNG test framework
+    testCompile group: 'org.testng', name: 'testng', version: '7.0.0'
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.16'
+
+    compile group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet', version: '2.29'
+    compile group: 'org.glassfish.jersey.ext', name: 'jersey-mvc-jsp', version: '2.29'
+    compile 'org.glassfish.jersey.inject:jersey-hk2:2.29'
+    compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.29'
+    // JAXB
+    compile group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.2.8-b01'
+
+
+}
+
+// See https://github.com/JetBrains/gradle-intellij-plugin/
+intellij {
+    version '2019.3.1'
+}
+patchPluginXml {
+    changeNotes """
+      Add change notes here.<br>
+      <em>most HTML tags may be used</em>"""
+}
