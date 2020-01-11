@@ -1,10 +1,9 @@
 package global.coda.hms.api;
 
-
 import global.coda.hms.applicationconstants.ResponseStatus;
 import global.coda.hms.bean.DoctorRecord;
 import global.coda.hms.bean.PatientRecord;
-import global.coda.hms.delegates.patient.PatientDelegate;
+import global.coda.hms.delegates.doctor.DoctorDelegate;
 import org.json.simple.JSONObject;
 
 import javax.ws.rs.FormParam;
@@ -17,41 +16,42 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 /**
- * The type Patient api.
+ * The type Doctor api.
  */
-@Path("/patient")
-public class PatientAPI {
+@Path("/doctor")
+public class DoctorAPI {
+
     private JSONObject jsonobject = new JSONObject();
 
-    private PatientDelegate patientDelegate = new PatientDelegate();
-    private PatientRecord record = new PatientRecord();
+    private DoctorDelegate doctorDelegate = new DoctorDelegate();
+    private DoctorRecord record = new DoctorRecord();
 
     /**
      * CreatePatient json object.
      *
-     * @param name     the name
-     * @param age      the age
-     * @param location the location
-     * @param phone    the phone
-     * @param disease  the disease
-     * @param password the password
+     * @param name       the name
+     * @param age        the age
+     * @param location   the location
+     * @param phone      the phone
+     * @param speciality the speciality
+     * @param password   the password
      * @return the json object
      */
     @POST
     @Path("/create")
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONObject createPatient(@FormParam("name") String name, @FormParam("age") int age,
+    public JSONObject createDoctor(@FormParam("name") String name, @FormParam("age") int age,
                                     @FormParam("location") String location, @FormParam("phone") String phone,
-                                    @FormParam("disease") String disease, @FormParam("password") String password) {
+                                    @FormParam("speciality") String speciality, @FormParam("password") String password) {
 
         String message = "";
         record.setAge(age);
-        record.setDisease(disease);
+        record.setSpeciality(speciality);
         record.setName(name);
         record.setPhone(phone);
         record.setPassword(password);
         record.setLocation(location);
-        if (patientDelegate.createPatient(record)) {
+        if (doctorDelegate.createDoctor(record)) {
             message = "created successfully";
             jsonobject.put("status", ResponseStatus.OK);
         } else {
@@ -66,29 +66,29 @@ public class PatientAPI {
     /**
      * Edit patient json object.
      *
-     * @param name     the name
-     * @param age      the age
-     * @param location the location
-     * @param phone    the phone
-     * @param disease  the disease
-     * @param password the password
+     * @param name       the name
+     * @param age        the age
+     * @param location   the location
+     * @param phone      the phone
+     * @param speciality the speciality
+     * @param password   the password
      * @return the json object
      */
     @POST
     @Path("/update")
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONObject editPatient(@FormParam("name") String name, @FormParam("age") int age,
+    public JSONObject editDoctor(@FormParam("name") String name, @FormParam("age") int age,
                                   @FormParam("location") String location, @FormParam("phone") String phone,
-                                  @FormParam("disease") String disease, @FormParam("password") String password) {
+                                  @FormParam("speciality") String speciality, @FormParam("password") String password) {
         String message = "";
         record.setAge(age);
-        record.setDisease(disease);
+        record.setSpeciality(speciality);
         record.setName(name);
         record.setPhone(phone);
         record.setPassword(password);
         record.setLocation(location);
-        record.setId(patientDelegate.readPatient(name).getId());
-        if (patientDelegate.updatePatient(record)) {
+        record.setId(doctorDelegate.readDoctor(name).getId());
+        if (doctorDelegate.updateDoctor(record)) {
             message = "updated successfully";
             jsonobject.put("status", ResponseStatus.OK);
         } else {
@@ -103,15 +103,15 @@ public class PatientAPI {
     /**
      * Readpatient json object.
      *
-     * @param patientName to get data.
+     * @param doctorName the doctor name
      * @return patient data.
      */
     @GET
-    @Path("/patientData/{patientName}")
+    @Path("/doctorData/{doctorName}")
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONObject readPatient(@PathParam("patientName") String patientName) {
+    public JSONObject readDoctor(@PathParam("doctorName") String doctorName) {
         String message = "";
-        record = patientDelegate.readPatient(patientName);
+        record = doctorDelegate.readDoctor(doctorName);
         if (record != null) {
             jsonobject.put("status", ResponseStatus.OK);
             jsonobject.put("message", record);
@@ -127,19 +127,19 @@ public class PatientAPI {
     /**
      * Gets patients doctors.
      *
-     * @param patientName the branch name
+     * @param doctorName the doctor name
      * @return the patients doctors
      */
     @GET
-    @Path("/{patientName}/getAllDoctors")
+    @Path("/{doctorName}/getAllPatients")
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONObject getPatientsDoctors(@PathParam("patientName") String patientName) {
+    public JSONObject getDoctorpatients(@PathParam("doctorName") String doctorName) {
         String message = "";
-        List<DoctorRecord> doctorRecordList;
-        doctorRecordList = patientDelegate.PatientDoctors(patientName);
-        if (doctorRecordList != null) {
+        List<PatientRecord> patientRecordList;
+        patientRecordList = doctorDelegate.getAllPatients(doctorName);
+        if (patientRecordList != null) {
             jsonobject.put("status", ResponseStatus.OK);
-            jsonobject.put("message", doctorRecordList);
+            jsonobject.put("message", patientRecordList);
         } else {
             message = "user not found";
             jsonobject.put("status", ResponseStatus.BAD_REQUEST);
@@ -147,6 +147,4 @@ public class PatientAPI {
         }
         return jsonobject;
     }
-
 }
-

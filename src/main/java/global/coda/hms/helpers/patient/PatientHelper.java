@@ -1,6 +1,5 @@
 package global.coda.hms.helpers.patient;
 
-import global.coda.hms.applicationconstants.PatientConstants;
 import global.coda.hms.bean.DoctorRecord;
 import global.coda.hms.bean.PatientRecord;
 import global.coda.hms.dao.patient.PatientDao;
@@ -8,8 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+
 
 /**
  * The type Patient helper.
@@ -20,10 +18,8 @@ public class PatientHelper {
     /**
      * The constant LOCAL_MESSAGES_BUNDLE.
      */
-// resource bundle initialization
-    public static final ResourceBundle LOCAL_MESSAGES_BUNDLE = ResourceBundle.getBundle(PatientConstants.PATIENT,
-            Locale.getDefault());
     private PatientDao patientdao = new PatientDao();
+    private List<DoctorRecord> result = null;
 
     /**
      * PatientService constructor.
@@ -38,10 +34,8 @@ public class PatientHelper {
      * @return the boolean
      */
     public boolean createPatient(PatientRecord record) {
-        if (patientdao.createPatientRecord(record)) {
-            return true;
-        }
-        return false;
+        LOGGER.info(PatientConstant.CREATE_PATIENT);
+        return patientdao.createPatientRecord(record);
     }
 
     /**
@@ -50,13 +44,11 @@ public class PatientHelper {
      * @param record the record
      * @return bool for successful update.
      */
-
     public boolean updateUser(PatientRecord record) {
+        LOGGER.info(PatientConstant.UPDATE_PATIENT);
         boolean result = false;
         // update location
-
-        result = new PatientDao().updatePatient(record);
-
+        result = patientdao.updatePatient(record);
         return result;
     }
 
@@ -67,18 +59,31 @@ public class PatientHelper {
      * @return record of patient.
      */
     public PatientRecord readPatient(String patientName) {
+        LOGGER.info(PatientConstant.READ_PATIENT);
         return patientdao.getPatientRecord(patientName);
     }
 
     /**
      * View users list.
      *
-     * @param branchname to store name of branch.
+     * @param branchName to store name of branch.
      * @return list for successful exe.
      */
-    public List<DoctorRecord> viewUsers(String branchname) {
-        List<DoctorRecord> result = null;
-        result = new PatientDao().viewUserDetails(branchname);
+    public List<DoctorRecord> viewPatients(String branchName) {
+        LOGGER.info(PatientConstant.READ_PATIENT);
+        result = new PatientDao().viewUserDetails(branchName);
+        return result;
+    }
+
+    /**
+     * Gets all doctors.
+     *
+     * @param patientName the patient name
+     * @return the all doctors
+     */
+    public List<DoctorRecord> getAllDoctors(String patientName) {
+        LOGGER.info(PatientConstant.PATIENT_DOCTOR);
+        result = patientdao.getAllDoctors(patientName);
         return result;
     }
 

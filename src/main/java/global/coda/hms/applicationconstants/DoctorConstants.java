@@ -6,11 +6,29 @@ package global.coda.hms.applicationconstants;
  * @author VC
  */
 public class DoctorConstants {
+    /**
+     * The constant ONE.
+     */
     public static final int ONE = 1;
+    /**
+     * The constant TWO.
+     */
     public static final int TWO = 2;
+    /**
+     * The constant THREE.
+     */
     public static final int THREE = 3;
+    /**
+     * The constant FOUR.
+     */
     public static final int FOUR = 4;
+    /**
+     * The constant FIVE.
+     */
     public static final int FIVE = 5;
+    /**
+     * The constant SIX.
+     */
     public static final int SIX = 6;
 
     /**
@@ -21,30 +39,6 @@ public class DoctorConstants {
      * The constant SQLQUEIRES.
      */
     public static final String SQLQUEIRES = "sqlqueries";
-    /**
-     * The Patname.
-     */
-    public static final String PATNAME = "PAT000I";
-    /**
-     * The Patdis.
-     */
-    public static final String PATDIS = "PAT001I";
-    /**
-     * The Patloc.
-     */
-    public static final String PATLOC = "PAT002I";
-    /**
-     * The Updatelocation.
-     */
-    public static final String UPDATELOCATION = "UPUL002D";
-    /**
-     * The Updateage.
-     */
-    public static final String UPDATEAGE = "UPUA003Q";
-    /**
-     * The Updatephone.
-     */
-    public static final String UPDATEPHONE = "UPUP003Q";
     /**
      * The Doctor update.
      */
@@ -70,4 +64,8 @@ public class DoctorConstants {
      * The Patients in branch.
      */
     public static final String PATIENTS_IN_BRANCH = "PATB004Q";
+    /**
+     * The constant DOCTORS_PATIENT.
+     */
+    public static final String DOCTORS_PATIENT = "DOPC001Q";
 }

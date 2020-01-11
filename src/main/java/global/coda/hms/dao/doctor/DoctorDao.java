@@ -16,6 +16,8 @@ import global.coda.hms.dao.DatabaseConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static global.coda.hms.dao.patient.PatientDao.SQL_QUERIES;
+
 /**
  * The type Doctor dao.
  */
@@ -29,10 +31,6 @@ public class DoctorDao {
     /**
      * The constant LOCAL_MESSAGES_BUNDLE.
      */
-// local message resource bundle
-    public static final ResourceBundle LOCAL_MESSAGES_BUNDLE = ResourceBundle.getBundle(DoctorConstants.DOCTOR,
-            Locale.getDefault());
-
     private static final Logger LOGGER = LogManager.getLogger(DoctorDao.class);
     // establishing connection between DAO and db
     private Connection connection = DatabaseConnection.createconnection();
@@ -48,6 +46,7 @@ public class DoctorDao {
      * @return true for success.
      */
     public boolean createDoctorRecord(DoctorRecord record) {
+        LOGGER.info(DoctorConstant.CREATE_DOCTOR);
 
         int result = 0;
         int userid = 0;
@@ -63,11 +62,11 @@ public class DoctorDao {
             result = statement.executeUpdate();
             ResultSet resultset = statement.getGeneratedKeys();
             if (resultset.next()) {
-                userid = resultset.getInt(1);
+                userid = resultset.getInt(DoctorConstants.ONE);
             }
             statement = connection.prepareStatement(QUERIES.getString(DoctorConstants.DOCTOR_CREATE_DOCTOR));
-            statement.setString(1, record.getSpeciality());
-            statement.setInt(2, userid);
+            statement.setString(DoctorConstants.ONE, record.getSpeciality());
+            statement.setInt(DoctorConstants.TWO, userid);
             result = statement.executeUpdate();
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
@@ -83,15 +82,16 @@ public class DoctorDao {
     /**
      * Gets doctor record.
      *
-     * @param patientName of doctor.
+     * @param doctorName of doctor.
      * @return true for success.
      */
-    public DoctorRecord getDoctorRecord(String patientName) {
+    public DoctorRecord getDoctorRecord(String doctorName) {
+        LOGGER.info(DoctorConstant.READ_DOCTOR);
         DoctorRecord record = null;
         try {
             record = new DoctorRecord();
             PreparedStatement statement = connection.prepareStatement(QUERIES.getString(DoctorConstants.DOCTOR_DATA));
-            statement.setString(DoctorConstants.ONE, patientName);
+            statement.setString(DoctorConstants.ONE, doctorName);
             ResultSet result = statement.executeQuery();
             if (result.next()) {
                 record.setId(result.getInt(DoctorConstants.ONE));
@@ -121,7 +121,7 @@ public class DoctorDao {
      * @return true for success.
      */
     public boolean updateDoctor(DoctorRecord record) {
-
+        LOGGER.info(DoctorConstant.UPDATE_DOCTOR);
         int result = 0;
         try {
             PreparedStatement statement = connection.prepareStatement(QUERIES.getString(DoctorConstants.DOCTOR_UPDATE));
@@ -148,15 +148,16 @@ public class DoctorDao {
     /**
      * View doctor details list.
      *
-     * @param branchname of doctor.
+     * @param branchName of doctor.
      * @return true for success.
      */
-    public List<PatientRecord> viewDoctorDetails(String branchname) {
+    public List<PatientRecord> viewDoctorDetails(String branchName) {
+        LOGGER.info(DoctorConstant.VIEW_PATIENT);
         List<PatientRecord> recordlist = new ArrayList<>();
         try {
             PreparedStatement statement = connection
                     .prepareStatement(QUERIES.getString(DoctorConstants.PATIENTS_IN_BRANCH));
-            statement.setString(1, branchname);
+            statement.setString(DoctorConstants.ONE, branchName);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 PatientRecord record = new PatientRecord();
@@ -172,5 +173,39 @@ public class DoctorDao {
         return recordlist;
     }
 
+    /**
+     * Gets all patients.
+     *
+     * @param doctorName the doctor name
+     * @return the all patients
+     */
+    public List<PatientRecord> getAllPatients(String doctorName) {
+        LOGGER.traceEntry(doctorName);
+        LOGGER.info(DoctorConstant.DOCTOR_PATIENT);
+        List<PatientRecord> recordists = new ArrayList<>();
+
+        try {
+            PreparedStatement statement = connection
+                    .prepareStatement(SQL_QUERIES.getString(DoctorConstants.DOCTORS_PATIENT));
+            statement.setString(DoctorConstants.ONE, doctorName);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                PatientRecord record = new PatientRecord();
+                record.setName(resultSet.getString(DoctorConstants.ONE));
+                record.setDisease(resultSet.getString(DoctorConstants.TWO));
+                record.setLocation(resultSet.getString(DoctorConstants.THREE));
+                record.setPhone(resultSet.getString(DoctorConstants.FOUR));
+
+                recordists.add(record);
+            }
+
+        } catch (Exception exception) {
+            LOGGER.error(exception.getMessage());
+        }
+        LOGGER.traceExit(recordists);
+        return recordists;
+    }
+
 }
+
 

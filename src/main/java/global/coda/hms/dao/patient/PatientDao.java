@@ -43,7 +43,8 @@ public class PatientDao {
      * @return bool for success.
      */
     public boolean createPatientRecord(PatientRecord record) {
-
+        LOGGER.traceEntry(record.toString());
+        LOGGER.info(PatientConstant.CREATE_PATIENT);
         int result = 0;
         int userid = 0;
         try {
@@ -64,6 +65,7 @@ public class PatientDao {
             statement.setString(PatientConstants.ONE, record.getDisease());
             statement.setInt(PatientConstants.TWO, userid);
             result = statement.executeUpdate();
+            LOGGER.traceExit();
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
         }
@@ -77,6 +79,8 @@ public class PatientDao {
      * @return patient record.
      */
     public PatientRecord getPatientRecord(String patientName) {
+        LOGGER.info(PatientConstant.READ_PATIENT);
+        LOGGER.traceEntry(patientName);
         PatientRecord record = null;
         try {
             record = new PatientRecord();
@@ -92,11 +96,14 @@ public class PatientDao {
                 record.setPhone(result.getString(PatientConstants.FIVE));
                 record.setDisease(result.getString(PatientConstants.SIX));
             }
+            LOGGER.traceEntry(record.toString());
             return record;
 
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
         }
+        assert record != null;
+        LOGGER.traceEntry(record.toString());
         return record;
     }
 
@@ -107,7 +114,8 @@ public class PatientDao {
      * @return bool for success.
      */
     public boolean updatePatient(PatientRecord record) {
-
+        LOGGER.info(PatientConstant.UPDATE_PATIENT);
+        LOGGER.traceEntry(record.toString());
         int result = 0;
         try {
             PreparedStatement statement = connection
@@ -121,6 +129,7 @@ public class PatientDao {
             statement.setString(PatientConstants.ONE, record.getDisease());
             statement.setInt(PatientConstants.TWO, record.getId());
             result = statement.executeUpdate();
+            LOGGER.traceExit(result);
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
         }
@@ -135,6 +144,8 @@ public class PatientDao {
      * @return list of doc in branch.
      */
     public List<DoctorRecord> viewUserDetails(String branchName) {
+        LOGGER.info(PatientConstant.VIEW_DOCTOR);
+        LOGGER.traceEntry(branchName);
         List<DoctorRecord> recordists = new ArrayList<>();
 
         try {
@@ -147,12 +158,47 @@ public class PatientDao {
                 record.setName(resultSet.getString(PatientConstants.ONE));
                 record.setSpeciality(resultSet.getString(PatientConstants.TWO));
                 record.setLocation(resultSet.getString(PatientConstants.THREE));
+                record.setPhone(resultSet.getString(PatientConstants.FOUR));
                 recordists.add(record);
             }
 
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
         }
+        LOGGER.traceExit(recordists.toString());
+        return recordists;
+    }
+
+    /**
+     * Gets all doctors.
+     *
+     * @param patientName the patient name
+     * @return the all doctors
+     */
+    public List<DoctorRecord> getAllDoctors(String patientName) {
+        LOGGER.info(PatientConstant.PATIENT_DOCTOR);
+        LOGGER.traceEntry(patientName);
+        List<DoctorRecord> recordists = new ArrayList<>();
+
+        try {
+            PreparedStatement statement = connection
+                    .prepareStatement(SQL_QUERIES.getString(PatientConstants.PATIENT_DOCTORS));
+            statement.setString(PatientConstants.ONE, patientName);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                DoctorRecord record = new DoctorRecord();
+                record.setName(resultSet.getString(PatientConstants.ONE));
+                record.setSpeciality(resultSet.getString(PatientConstants.TWO));
+                record.setLocation(resultSet.getString(PatientConstants.THREE));
+                record.setPhone(resultSet.getString(PatientConstants.FOUR));
+
+                recordists.add(record);
+            }
+
+        } catch (Exception exception) {
+            LOGGER.error(exception.getMessage());
+        }
+        LOGGER.traceExit(recordists);
         return recordists;
     }
 

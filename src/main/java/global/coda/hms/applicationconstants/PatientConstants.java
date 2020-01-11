@@ -22,4 +22,7 @@ public class PatientConstants {
     public static final String PATIENT_CREATE_USER = "PATCU00Q";
     public static final String PATIENT_CREATE_PATIENT = "PATCP00Q";
 
+    public static final String PATIENT_DOCTORS = "PADC001Q";
+
+
 }
