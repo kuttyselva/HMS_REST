@@ -24,8 +24,10 @@ public class PatientHelper {
 
     /**
      * PatientService constructor.
+     *
+     * @throws SQLException the sql exception
      */
-    public PatientHelper() {
+    public PatientHelper() throws SQLException {
     }
 
     /**

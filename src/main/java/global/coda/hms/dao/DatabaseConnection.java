@@ -1,5 +1,6 @@
 package global.coda.hms.dao;
 
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -10,6 +11,9 @@ import java.util.ResourceBundle;
  * The type Database connection.
  */
 public class DatabaseConnection {
+    /**
+     * The constant LOCAL_MESSAGES_BUNDLE.
+     */
     public static final ResourceBundle LOCAL_MESSAGES_BUNDLE = ResourceBundle.getBundle(DatabaseQueries.SQL_QUERIES,
             Locale.getDefault());
     private static Connection connection = null;
@@ -19,9 +23,12 @@ public class DatabaseConnection {
      */
 
     /**
+     * Createconnection connection.
+     *
      * @return connection of db.
+     * @throws SQLException the sql exception
      */
-    public static Connection createconnection() {
+    public static Connection createconnection() throws  SQLException {
         if (connection == null) {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
@@ -30,8 +37,8 @@ public class DatabaseConnection {
                 String connectionUrl = LOCAL_MESSAGES_BUNDLE.getString(DatabaseQueries.CONNECTION);
                 connection = DriverManager.getConnection(connectionUrl);
                 return connection;
-            } catch (ClassNotFoundException | SQLException e) {
-                e.printStackTrace();
+            } catch (ClassNotFoundException | SQLException exception) {
+                throw new SQLException(exception);
             }
         }
         return connection;

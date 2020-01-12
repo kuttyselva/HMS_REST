@@ -14,6 +14,7 @@ import global.coda.hms.applicationconstants.PatientConstants;
 import global.coda.hms.bean.DoctorRecord;
 import global.coda.hms.bean.PatientRecord;
 import global.coda.hms.dao.DatabaseConnection;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,8 +24,10 @@ import org.apache.logging.log4j.Logger;
 public class PatientDao {
     /**
      * Instantiates a new Patient dao.
+     *
+     * @throws SQLException the sql exception
      */
-    public PatientDao() {
+    public PatientDao() throws  SQLException {
         super();
         // TODO Auto-generated constructor stub
     }

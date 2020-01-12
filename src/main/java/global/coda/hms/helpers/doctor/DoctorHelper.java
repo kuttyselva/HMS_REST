@@ -6,6 +6,7 @@ import global.coda.hms.dao.doctor.DoctorDao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -14,12 +15,13 @@ import java.util.List;
 public class DoctorHelper {
     private static final Logger LOGGER = LogManager.getLogger(DoctorHelper.class);
     private DoctorDao doctorDao = new DoctorDao();
-    private List<PatientRecord> result = null;
 
     /**
      * Instantiates a new Doctor helper.
+     *
+     * @throws SQLException the sql exception
      */
-    public DoctorHelper() {
+    public DoctorHelper() throws SQLException {
 
     }
 
@@ -28,10 +30,14 @@ public class DoctorHelper {
      *
      * @param record the record
      * @return the boolean
+     * @throws SQLException the sql exception
      */
-    public boolean createDoctor(DoctorRecord record) {
+    public boolean createDoctor(DoctorRecord record) throws SQLException {
+        LOGGER.traceEntry(record.toString());
         LOGGER.info(DoctorConstant.CREATE_DOCTOR);
-        return doctorDao.createDoctorRecord(record);
+        boolean result = doctorDao.createDoctorRecord(record);
+        LOGGER.traceExit(result);
+        return result;
     }
 
     /**
@@ -39,12 +45,13 @@ public class DoctorHelper {
      *
      * @param record the record
      * @return the boolean
+     * @throws SQLException the sql exception
      */
-    public boolean updateDoctor(DoctorRecord record) {
+    public boolean updateDoctor(DoctorRecord record) throws SQLException {
+        LOGGER.traceEntry(record.toString());
         LOGGER.info(DoctorConstant.UPDATE_DOCTOR);
-        boolean result;
-        // update location
-        result = new DoctorDao().updateDoctor(record);
+        boolean result = doctorDao.updateDoctor(record);
+        LOGGER.traceExit(result);
         return result;
     }
 
@@ -53,33 +60,40 @@ public class DoctorHelper {
      *
      * @param doctorName the doctor name
      * @return the doctor record
+     * @throws SQLException the sql exception
      */
-    public DoctorRecord readDoctor(String doctorName) {
+    public DoctorRecord readDoctor(String doctorName) throws SQLException {
+        LOGGER.traceEntry(doctorName);
         LOGGER.info(DoctorConstant.READ_DOCTOR);
-        return doctorDao.getDoctorRecord(doctorName);
-    }
-
-    /**
-     * View users list.
-     *
-     * @param branchName the branch name
-     * @return the list
-     */
-    public List<PatientRecord> doctorBranch(String branchName) {
-        LOGGER.info(DoctorConstant.PATIENT_DOCTOR);
-        result = doctorDao.viewDoctorDetails(branchName);
+        DoctorRecord result = doctorDao.getDoctorRecord(doctorName);
+        LOGGER.traceExit(result);
         return result;
     }
+
+//    /**
+//     * View users list.
+//     *
+//     * @param branchName the branch name
+//     * @return the list
+//     */
+//    public List<PatientRecord> doctorBranch(String branchName) {
+//        LOGGER.info(DoctorConstant.PATIENT_DOCTOR);
+//        result = doctorDao.viewDoctorDetails(branchName);
+//        return result;
+//    }
 
     /**
      * Get all patients list.
      *
      * @param doctorName the doctor name
      * @return the list
+     * @throws SQLException the sql exception
      */
-    public List<PatientRecord> getAllPatients(String doctorName) {
+    public List<PatientRecord> getAllPatients(String doctorName) throws SQLException {
+        LOGGER.traceEntry(doctorName);
         LOGGER.info(DoctorConstant.PATIENT_DOCTOR);
-        result = doctorDao.getAllPatients(doctorName);
+        List<PatientRecord> result = doctorDao.getAllPatients(doctorName);
+        LOGGER.traceExit(result);
         return result;
     }
 

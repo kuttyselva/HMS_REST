@@ -1,134 +1,161 @@
 package global.coda.hms.bean;
 
 /**
+ * The type Doctor record.
+ *
  * @author VC
  */
 public class DoctorRecord {
-	private int id;
-	private int age;
-	private String name;
-	private String location;
-	private String password;
-	private String phone;
-	private String speciality;
+    private int id;
+    private int age;
+    private String name;
+    private String location;
+    private String password;
+    private String phone;
+    private String speciality;
 
 	/**
 	 * gets id.
+	 *
 	 * @return id userId.
 	 */
 	public int getId() {
-		return id;
-	}
+        return id;
+    }
+
+	/**
+	 * Is empty boolean.
+	 *
+	 * @return the boolean
+	 */
+	public boolean isEmpty() {
+        if (name == null || password == null || id == -1 || location == null || age == -1 || phone == null) {
+            return true;
+        }
+        return false;
+    }
 
 	/**
 	 * gets age.
+	 *
 	 * @return age users age.
 	 */
 	public int getAge() {
-		return age;
-	}
+        return age;
+    }
 
 	/**
 	 * sets id.
+	 *
 	 * @param id userid.
 	 */
 	public void setId(int id) {
-		this.id = id;
-	}
+        this.id = id;
+    }
 
 	/**
 	 * sets age.
+	 *
 	 * @param age user age.
 	 */
 	public void setAge(int age) {
-		this.age = age;
-	}
+        this.age = age;
+    }
 
 	/**
 	 * gets speciality.
+	 *
 	 * @return speciality job of doc.
 	 */
-
 	public String getSpeciality() {
-		return speciality;
-	}
+        return speciality;
+    }
 
 	/**
 	 * sets age.
+	 *
 	 * @param speciality user job.
 	 */
 	public void setSpeciality(String speciality) {
-		this.speciality = speciality;
-	}
+        this.speciality = speciality;
+    }
 
-	@Override
-	public String toString() {
-		return "DoctorRecord{" + "age='" + age + '\'' + ", name='" + name + '\'' + ", location='" + location + '\''
-				+ ", password='" + password + '\'' + ", phone='" + phone + '\'' + '}';
-	}
+    @Override
+    public String toString() {
+        return "DoctorRecord{" + "age='" + age + '\'' + ", name='" + name + '\'' + ", location='" + location + '\''
+                + ", password='" + password + '\'' + ", phone='" + phone + '\'' + '}';
+    }
 
 	/**
 	 * gets name.
+	 *
 	 * @return name name of doc.
 	 */
 	public String getName() {
-		return name;
-	}
+        return name;
+    }
 
 	/**
 	 * sets name.
+	 *
 	 * @param name name of doc
 	 */
 	public void setName(String name) {
-		this.name = name;
-	}
+        this.name = name;
+    }
 
 	/**
 	 * gets location.
+	 *
 	 * @return location location of doc.
 	 */
 	public String getLocation() {
-		return location;
-	}
+        return location;
+    }
 
 	/**
 	 * sets location.
+	 *
 	 * @param location loc of doc
 	 */
 	public void setLocation(String location) {
-		this.location = location;
-	}
+        this.location = location;
+    }
 
 	/**
 	 * gets password.
+	 *
 	 * @return password password of doc.
 	 */
 	public String getPassword() {
-		return password;
-	}
+        return password;
+    }
 
 	/**
 	 * sets password.
+	 *
 	 * @param password doc password.
 	 */
 	public void setPassword(String password) {
-		this.password = password;
-	}
+        this.password = password;
+    }
 
 	/**
 	 * gets phone.
+	 *
 	 * @return phone phone number of doc.
 	 */
 	public String getPhone() {
-		return phone;
-	}
+        return phone;
+    }
 
 	/**
 	 * sets phone.
+	 *
 	 * @param phone doc phone number.
 	 */
 	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+        this.phone = phone;
+    }
 
 }

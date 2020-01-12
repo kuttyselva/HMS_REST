@@ -25,4 +25,12 @@ public class DoctorConstant {
      */
     public static final String DOCTOR_PATIENT = "PatientsDoctor DAO initiated";
 
+    public static final String ERR_DOC_CRT = "Error occurred in Creating doctor";
+
+    public static final String ERR_DOC_RED = "Error occurred in Reading doctor";
+
+    public static final String ERR_DOC_UPD = "Error occurred in Updating doctor";
+    public static final String ERR_DOC_DOC = "Error occurred in getting doctor's patient";
+
+
 }

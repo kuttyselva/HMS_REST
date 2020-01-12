@@ -18,6 +18,14 @@ public class PatientDelegate {
     private final PatientHelper patientHelper = new PatientHelper();
     private static final Logger LOGGER = LogManager.getLogger(PatientDelegate.class);
 
+    /**
+     * Instantiates a new Patient delegate.
+     *
+     * @throws SQLException the sql exception
+     */
+    public PatientDelegate() throws SQLException {
+    }
+
 
     /**
      * Create patient boolean.

@@ -3,6 +3,7 @@ package global.coda.hms.dao.doctor;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,15 @@ public class DoctorDao {
     private static final Logger LOGGER = LogManager.getLogger(DoctorDao.class);
     // establishing connection between DAO and db
     private Connection connection = DatabaseConnection.createconnection();
+
+    /**
+     * Instantiates a new Doctor dao.
+     *
+     * @throws SQLException the sql exception
+     */
+    public DoctorDao() throws  SQLException {
+        super();
+    }
     /*
      * creates new Doctor record gets input into doctor bean input doctor record
      * output true for successful insertion
@@ -44,10 +54,11 @@ public class DoctorDao {
      *
      * @param record of doctor.
      * @return true for success.
+     * @throws SQLException the sql exception
      */
-    public boolean createDoctorRecord(DoctorRecord record) {
+    public boolean createDoctorRecord(DoctorRecord record) throws SQLException {
+        LOGGER.traceEntry(record.toString());
         LOGGER.info(DoctorConstant.CREATE_DOCTOR);
-
         int result = 0;
         int userid = 0;
         try {
@@ -68,9 +79,13 @@ public class DoctorDao {
             statement.setString(DoctorConstants.ONE, record.getSpeciality());
             statement.setInt(DoctorConstants.TWO, userid);
             result = statement.executeUpdate();
+        } catch (SQLException exception) {
+            LOGGER.error(DoctorConstant.ERR_DOC_CRT, exception);
+            throw exception;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
         }
+        LOGGER.traceExit(result);
         return result > 0;
     }
 
@@ -84,8 +99,10 @@ public class DoctorDao {
      *
      * @param doctorName of doctor.
      * @return true for success.
+     * @throws SQLException the sql exception
      */
-    public DoctorRecord getDoctorRecord(String doctorName) {
+    public DoctorRecord getDoctorRecord(String doctorName) throws SQLException {
+        LOGGER.traceEntry(doctorName);
         LOGGER.info(DoctorConstant.READ_DOCTOR);
         DoctorRecord record = null;
         try {
@@ -103,9 +120,13 @@ public class DoctorDao {
             }
             return record;
 
+        } catch (SQLException exception) {
+            LOGGER.error(DoctorConstant.ERR_DOC_RED, exception);
+            throw exception;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
         }
+        LOGGER.traceExit(record);
         return record;
     }
 
@@ -119,8 +140,10 @@ public class DoctorDao {
      *
      * @param record of doctor.
      * @return true for success.
+     * @throws SQLException the sql exception
      */
-    public boolean updateDoctor(DoctorRecord record) {
+    public boolean updateDoctor(DoctorRecord record) throws SQLException {
+        LOGGER.traceEntry(record.toString());
         LOGGER.info(DoctorConstant.UPDATE_DOCTOR);
         int result = 0;
         try {
@@ -134,9 +157,13 @@ public class DoctorDao {
             statement.setString(DoctorConstants.ONE, record.getSpeciality());
             statement.setInt(DoctorConstants.TWO, record.getId());
             result = statement.executeUpdate();
+        } catch (SQLException exception) {
+            LOGGER.error(DoctorConstant.ERR_DOC_UPD, exception);
+            throw exception;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
         }
+        LOGGER.traceExit(result);
         return result > 0;
     }
 
@@ -150,8 +177,10 @@ public class DoctorDao {
      *
      * @param branchName of doctor.
      * @return true for success.
+     * @throws SQLException the sql exception
      */
-    public List<PatientRecord> viewDoctorDetails(String branchName) {
+    public List<PatientRecord> viewDoctorDetails(String branchName) throws SQLException {
+        LOGGER.traceEntry(branchName);
         LOGGER.info(DoctorConstant.VIEW_PATIENT);
         List<PatientRecord> recordlist = new ArrayList<>();
         try {
@@ -167,9 +196,13 @@ public class DoctorDao {
                 recordlist.add(record);
             }
 
+        } catch (SQLException exception) {
+            LOGGER.error(DoctorConstant.ERR_DOC_RED, exception);
+            throw exception;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
         }
+        LOGGER.traceExit(recordlist);
         return recordlist;
     }
 
@@ -178,8 +211,9 @@ public class DoctorDao {
      *
      * @param doctorName the doctor name
      * @return the all patients
+     * @throws SQLException the sql exception
      */
-    public List<PatientRecord> getAllPatients(String doctorName) {
+    public List<PatientRecord> getAllPatients(String doctorName) throws SQLException {
         LOGGER.traceEntry(doctorName);
         LOGGER.info(DoctorConstant.DOCTOR_PATIENT);
         List<PatientRecord> recordists = new ArrayList<>();
@@ -199,6 +233,9 @@ public class DoctorDao {
                 recordists.add(record);
             }
 
+        } catch (SQLException exception) {
+            LOGGER.error(DoctorConstant.ERR_DOC_DOC, exception);
+            throw exception;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
         }

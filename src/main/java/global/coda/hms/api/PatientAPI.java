@@ -1,10 +1,8 @@
 package global.coda.hms.api;
 
-
 import global.coda.hms.applicationconstants.ResponseStatus;
 import global.coda.hms.bean.DoctorRecord;
 import global.coda.hms.bean.PatientRecord;
-import global.coda.hms.dao.patient.PatientDao;
 import global.coda.hms.delegates.patient.PatientDelegate;
 import global.coda.hms.exceptionmappers.BusinessException;
 import global.coda.hms.exceptionmappers.SystemException;
@@ -19,6 +17,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -30,6 +29,14 @@ public class PatientAPI {
     private static final Logger LOGGER = LogManager.getLogger(PatientAPI.class);
     private PatientDelegate patientDelegate = new PatientDelegate();
     private PatientRecord record = new PatientRecord();
+
+    /**
+     * Instantiates a new Patient api.
+     *
+     * @throws SQLException the sql exception
+     */
+    public PatientAPI() throws SQLException {
+    }
 
     /**
      * CreatePatient json object.
@@ -50,7 +57,7 @@ public class PatientAPI {
     public JSONObject createPatient(@FormParam("name") String name, @FormParam("age") int age,
                                     @FormParam("location") String location, @FormParam("phone") String phone,
                                     @FormParam("disease") String disease, @FormParam("password") String password) throws SystemException, BusinessException {
-
+        LOGGER.traceEntry(name, age, location, phone, disease);
         String message;
         record.setAge(age);
         record.setDisease(disease);
@@ -66,6 +73,7 @@ public class PatientAPI {
             jsonobject.put("status", ResponseStatus.BAD_REQUEST);
         }
         jsonobject.put("message", message);
+        LOGGER.traceExit(jsonobject);
         return jsonobject;
 
     }
@@ -89,6 +97,7 @@ public class PatientAPI {
     public JSONObject editPatient(@FormParam("name") String name, @FormParam("age") int age,
                                   @FormParam("location") String location, @FormParam("phone") String phone,
                                   @FormParam("disease") String disease, @FormParam("password") String password) throws SystemException, BusinessException {
+        LOGGER.traceEntry(name, age, location, phone, disease);
         String message;
         record.setAge(age);
         record.setDisease(disease);
@@ -105,6 +114,7 @@ public class PatientAPI {
             jsonobject.put("status", ResponseStatus.BAD_REQUEST);
         }
         jsonobject.put("message", message);
+        LOGGER.traceExit(jsonobject);
         return jsonobject;
 
     }
@@ -121,6 +131,7 @@ public class PatientAPI {
     @Path("/patientData/{patientName}")
     @Produces(MediaType.APPLICATION_JSON)
     public JSONObject readPatient(@PathParam("patientName") String patientName) throws SystemException, BusinessException {
+        LOGGER.traceEntry(patientName);
         String message;
         if (patientName.length() < 2) {
             throw new BusinessException();
@@ -134,6 +145,7 @@ public class PatientAPI {
             jsonobject.put("status", ResponseStatus.BAD_REQUEST);
             jsonobject.put("message", message);
         }
+        LOGGER.traceExit(jsonobject);
         return jsonobject;
 
     }
@@ -150,6 +162,7 @@ public class PatientAPI {
     @Path("/{patientName}/getAllDoctors")
     @Produces(MediaType.APPLICATION_JSON)
     public JSONObject getPatientsDoctors(@PathParam("patientName") String patientName) throws SystemException, BusinessException {
+        LOGGER.traceEntry(patientName);
         String message = "";
         List<DoctorRecord> doctorRecordList;
         doctorRecordList = patientDelegate.PatientDoctors(patientName);
@@ -161,6 +174,7 @@ public class PatientAPI {
             jsonobject.put("status", ResponseStatus.BAD_REQUEST);
             jsonobject.put("message", message);
         }
+        LOGGER.traceExit(jsonobject);
         return jsonobject;
     }
 
