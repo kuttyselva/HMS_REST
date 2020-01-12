@@ -4,7 +4,12 @@ package global.coda.hms.api;
 import global.coda.hms.applicationconstants.ResponseStatus;
 import global.coda.hms.bean.DoctorRecord;
 import global.coda.hms.bean.PatientRecord;
+import global.coda.hms.dao.patient.PatientDao;
 import global.coda.hms.delegates.patient.PatientDelegate;
+import global.coda.hms.exceptionmappers.BusinessException;
+import global.coda.hms.exceptionmappers.SystemException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
 import javax.ws.rs.FormParam;
@@ -22,7 +27,7 @@ import java.util.List;
 @Path("/patient")
 public class PatientAPI {
     private JSONObject jsonobject = new JSONObject();
-
+    private static final Logger LOGGER = LogManager.getLogger(PatientAPI.class);
     private PatientDelegate patientDelegate = new PatientDelegate();
     private PatientRecord record = new PatientRecord();
 
@@ -36,15 +41,17 @@ public class PatientAPI {
      * @param disease  the disease
      * @param password the password
      * @return the json object
+     * @throws SystemException   the system exception
+     * @throws BusinessException the business exception
      */
     @POST
     @Path("/create")
     @Produces(MediaType.APPLICATION_JSON)
     public JSONObject createPatient(@FormParam("name") String name, @FormParam("age") int age,
                                     @FormParam("location") String location, @FormParam("phone") String phone,
-                                    @FormParam("disease") String disease, @FormParam("password") String password) {
+                                    @FormParam("disease") String disease, @FormParam("password") String password) throws SystemException, BusinessException {
 
-        String message = "";
+        String message;
         record.setAge(age);
         record.setDisease(disease);
         record.setName(name);
@@ -73,14 +80,16 @@ public class PatientAPI {
      * @param disease  the disease
      * @param password the password
      * @return the json object
+     * @throws SystemException   the system exception
+     * @throws BusinessException the business exception
      */
     @POST
     @Path("/update")
     @Produces(MediaType.APPLICATION_JSON)
     public JSONObject editPatient(@FormParam("name") String name, @FormParam("age") int age,
                                   @FormParam("location") String location, @FormParam("phone") String phone,
-                                  @FormParam("disease") String disease, @FormParam("password") String password) {
-        String message = "";
+                                  @FormParam("disease") String disease, @FormParam("password") String password) throws SystemException, BusinessException {
+        String message;
         record.setAge(age);
         record.setDisease(disease);
         record.setName(name);
@@ -101,16 +110,21 @@ public class PatientAPI {
     }
 
     /**
-     * Readpatient json object.
+     * ReadPatient json object.
      *
      * @param patientName to get data.
      * @return patient data.
+     * @throws SystemException   the system exception
+     * @throws BusinessException the business exception
      */
     @GET
     @Path("/patientData/{patientName}")
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONObject readPatient(@PathParam("patientName") String patientName) {
-        String message = "";
+    public JSONObject readPatient(@PathParam("patientName") String patientName) throws SystemException, BusinessException {
+        String message;
+        if (patientName.length() < 2) {
+            throw new BusinessException();
+        }
         record = patientDelegate.readPatient(patientName);
         if (record != null) {
             jsonobject.put("status", ResponseStatus.OK);
@@ -129,11 +143,13 @@ public class PatientAPI {
      *
      * @param patientName the branch name
      * @return the patients doctors
+     * @throws SystemException   the system exception
+     * @throws BusinessException the business exception
      */
     @GET
     @Path("/{patientName}/getAllDoctors")
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONObject getPatientsDoctors(@PathParam("patientName") String patientName) {
+    public JSONObject getPatientsDoctors(@PathParam("patientName") String patientName) throws SystemException, BusinessException {
         String message = "";
         List<DoctorRecord> doctorRecordList;
         doctorRecordList = patientDelegate.PatientDoctors(patientName);

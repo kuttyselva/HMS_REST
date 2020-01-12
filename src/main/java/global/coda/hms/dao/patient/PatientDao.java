@@ -3,6 +3,7 @@ package global.coda.hms.dao.patient;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +42,9 @@ public class PatientDao {
      *
      * @param record of patient.
      * @return bool for success.
+     * @throws SQLException the sql exception
      */
-    public boolean createPatientRecord(PatientRecord record) {
+    public boolean createPatientRecord(PatientRecord record) throws SQLException {
         LOGGER.traceEntry(record.toString());
         LOGGER.info(PatientConstant.CREATE_PATIENT);
         int result = 0;
@@ -66,6 +68,9 @@ public class PatientDao {
             statement.setInt(PatientConstants.TWO, userid);
             result = statement.executeUpdate();
             LOGGER.traceExit();
+        } catch (SQLException exception) {
+            LOGGER.error(PatientConstant.ERR_PAT_CRT, exception);
+            throw exception;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
         }
@@ -77,8 +82,9 @@ public class PatientDao {
      *
      * @param patientName of user.
      * @return patient record.
+     * @throws SQLException the sql exception
      */
-    public PatientRecord getPatientRecord(String patientName) {
+    public PatientRecord getPatientRecord(String patientName) throws SQLException {
         LOGGER.info(PatientConstant.READ_PATIENT);
         LOGGER.traceEntry(patientName);
         PatientRecord record = null;
@@ -99,6 +105,9 @@ public class PatientDao {
             LOGGER.traceEntry(record.toString());
             return record;
 
+        } catch (SQLException exception) {
+            LOGGER.error(PatientConstant.ERR_PAT_RED, exception);
+            throw exception;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
         }
@@ -112,8 +121,9 @@ public class PatientDao {
      *
      * @param record of patient.
      * @return bool for success.
+     * @throws SQLException the sql exception
      */
-    public boolean updatePatient(PatientRecord record) {
+    public boolean updatePatient(PatientRecord record) throws SQLException {
         LOGGER.info(PatientConstant.UPDATE_PATIENT);
         LOGGER.traceEntry(record.toString());
         int result = 0;
@@ -130,6 +140,9 @@ public class PatientDao {
             statement.setInt(PatientConstants.TWO, record.getId());
             result = statement.executeUpdate();
             LOGGER.traceExit(result);
+        } catch (SQLException exception) {
+            LOGGER.error(PatientConstant.ERR_PAT_UPD, exception);
+            throw exception;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
         }
@@ -142,8 +155,9 @@ public class PatientDao {
      *
      * @param branchName of user.
      * @return list of doc in branch.
+     * @throws SQLException the sql exception
      */
-    public List<DoctorRecord> viewUserDetails(String branchName) {
+    public List<DoctorRecord> viewUserDetails(String branchName) throws SQLException {
         LOGGER.info(PatientConstant.VIEW_DOCTOR);
         LOGGER.traceEntry(branchName);
         List<DoctorRecord> recordists = new ArrayList<>();
@@ -162,6 +176,9 @@ public class PatientDao {
                 recordists.add(record);
             }
 
+        }  catch (SQLException exception) {
+            LOGGER.error(PatientConstant.ERR_PAT_RED, exception);
+            throw exception;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
         }
@@ -174,8 +191,9 @@ public class PatientDao {
      *
      * @param patientName the patient name
      * @return the all doctors
+     * @throws SQLException the sql exception
      */
-    public List<DoctorRecord> getAllDoctors(String patientName) {
+    public List<DoctorRecord> getAllDoctors(String patientName) throws SQLException {
         LOGGER.info(PatientConstant.PATIENT_DOCTOR);
         LOGGER.traceEntry(patientName);
         List<DoctorRecord> recordists = new ArrayList<>();
@@ -195,6 +213,9 @@ public class PatientDao {
                 recordists.add(record);
             }
 
+        }  catch (SQLException exception) {
+            LOGGER.error(PatientConstant.ERR_PAT_DOC, exception);
+            throw exception;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
         }

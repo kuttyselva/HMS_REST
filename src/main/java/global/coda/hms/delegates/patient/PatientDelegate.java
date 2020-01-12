@@ -2,10 +2,13 @@ package global.coda.hms.delegates.patient;
 
 import global.coda.hms.bean.DoctorRecord;
 import global.coda.hms.bean.PatientRecord;
+import global.coda.hms.exceptionmappers.BusinessException;
+import global.coda.hms.exceptionmappers.SystemException;
 import global.coda.hms.helpers.patient.PatientHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -21,10 +24,19 @@ public class PatientDelegate {
      *
      * @param record the record
      * @return the boolean
+     * @throws SystemException   the system exception
+     * @throws BusinessException the business exception
      */
-    public boolean createPatient(PatientRecord record) {
+    public boolean createPatient(PatientRecord record) throws SystemException, BusinessException {
+        if (record == null || record.isEmpty()) {
+            throw new BusinessException();
+        }
         LOGGER.info(PatientConstants.CREATE_PATIENT);
-        return patientHelper.createPatient(record);
+        try {
+            return patientHelper.createPatient(record);
+        } catch (SQLException exception) {
+            throw new SystemException();
+        }
     }
 
     /**
@@ -32,10 +44,19 @@ public class PatientDelegate {
      *
      * @param record the record
      * @return the boolean
+     * @throws SystemException   the system exception
+     * @throws BusinessException the business exception
      */
-    public boolean updatePatient(PatientRecord record) {
+    public boolean updatePatient(PatientRecord record) throws SystemException, BusinessException {
+        if (record == null || record.isEmpty()) {
+            throw new BusinessException();
+        }
         LOGGER.info(PatientConstants.UPDATE_PATIENT);
-        return patientHelper.updateUser(record);
+        try {
+            return patientHelper.updateUser(record);
+        } catch (SQLException e) {
+            throw new SystemException();
+        }
     }
 
     /**
@@ -43,21 +64,38 @@ public class PatientDelegate {
      *
      * @param patientName the patient name
      * @return the patient record
+     * @throws SystemException   the system exception
+     * @throws BusinessException the business exception
      */
-    public PatientRecord readPatient(String patientName) {
+    public PatientRecord readPatient(String patientName) throws SystemException, BusinessException {
+        if (patientName.length() < 2) {
+             throw new BusinessException();
+        }
         LOGGER.info(PatientConstants.READ_PATIENT);
-        return patientHelper.readPatient(patientName);
+        try {
+            return patientHelper.readPatient(patientName);
+        } catch (SQLException e) {
+            throw new SystemException();
+        }
     }
 
     /**
      * Patient doctors list.
      *
-     * @param branchName the branch name
+     * @param patientName the patient name
      * @return the list
+     * @throws SystemException   the system exception
+     * @throws BusinessException the business exception
      */
-    public List<DoctorRecord> PatientDoctors(String branchName) {
+    public List<DoctorRecord> PatientDoctors(String patientName) throws SystemException, BusinessException {
         LOGGER.info(PatientConstants.PATIENT_DOCTOR);
-        return patientHelper.getAllDoctors(branchName);
+        if (patientName.length() < 1) {
+            throw new BusinessException();
+        }
+        try {
+            return patientHelper.getAllDoctors(patientName);
+        } catch (SQLException e) {
+            throw new SystemException();
+        }
     }
-
 }

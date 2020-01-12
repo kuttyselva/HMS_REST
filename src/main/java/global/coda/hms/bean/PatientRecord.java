@@ -1,6 +1,8 @@
 package global.coda.hms.bean;
 
 /**
+ * The type Patient record.
+ *
  * @author VC
  */
 public class PatientRecord {
@@ -10,6 +12,8 @@ public class PatientRecord {
 	public PatientRecord() {
 		// TODO Auto-generated constructor stub
 	}
+
+
 
 	@Override
 	public String toString() {
@@ -25,6 +29,8 @@ public class PatientRecord {
 	private String phone;
 
 	/**
+	 * Gets disease.
+	 *
 	 * @return disease of patient.
 	 */
 	public String getDisease() {
@@ -32,6 +38,20 @@ public class PatientRecord {
 	}
 
 	/**
+	 * Is empty boolean.
+	 *
+	 * @return the boolean
+	 */
+	public boolean isEmpty() {
+		if (name == null || password == null || id == -1 || location == null || age == -1 || phone == null) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Sets disease.
+	 *
 	 * @param disease of patient.
 	 */
 	public void setDisease(String disease) {
@@ -41,6 +61,8 @@ public class PatientRecord {
 	private String disease;
 
 	/**
+	 * Instantiates a new Patient record.
+	 *
 	 * @param id       of patient.
 	 * @param name     of patient.
 	 * @param age      of patient.
@@ -56,6 +78,8 @@ public class PatientRecord {
 	}
 
 	/**
+	 * Gets id.
+	 *
 	 * @return id of patient.
 	 */
 	public int getId() {
@@ -63,6 +87,8 @@ public class PatientRecord {
 	}
 
 	/**
+	 * Sets id.
+	 *
 	 * @param id of patient.
 	 */
 	public void setId(int id) {
@@ -70,6 +96,8 @@ public class PatientRecord {
 	}
 
 	/**
+	 * Gets age.
+	 *
 	 * @return age of patient.
 	 */
 	public int getAge() {
@@ -77,6 +105,8 @@ public class PatientRecord {
 	}
 
 	/**
+	 * Sets age.
+	 *
 	 * @param age of patient.
 	 */
 	public void setAge(int age) {
@@ -84,6 +114,8 @@ public class PatientRecord {
 	}
 
 	/**
+	 * Gets name.
+	 *
 	 * @return name of patient.
 	 */
 	public String getName() {
@@ -91,6 +123,8 @@ public class PatientRecord {
 	}
 
 	/**
+	 * Sets name.
+	 *
 	 * @param name of patient.
 	 */
 	public void setName(String name) {
@@ -98,6 +132,8 @@ public class PatientRecord {
 	}
 
 	/**
+	 * Gets location.
+	 *
 	 * @return location of patient.
 	 */
 	public String getLocation() {
@@ -105,6 +141,8 @@ public class PatientRecord {
 	}
 
 	/**
+	 * Sets location.
+	 *
 	 * @param location2 of patient.
 	 */
 	public void setLocation(String location2) {
@@ -112,6 +150,8 @@ public class PatientRecord {
 	}
 
 	/**
+	 * Gets password.
+	 *
 	 * @return passw of patient.
 	 */
 	public String getPassword() {
@@ -119,6 +159,8 @@ public class PatientRecord {
 	}
 
 	/**
+	 * Sets password.
+	 *
 	 * @param password of patient.
 	 */
 	public void setPassword(String password) {
@@ -126,6 +168,8 @@ public class PatientRecord {
 	}
 
 	/**
+	 * Gets phone.
+	 *
 	 * @return phone of patient.
 	 */
 	public String getPhone() {
@@ -133,6 +177,8 @@ public class PatientRecord {
 	}
 
 	/**
+	 * Sets phone.
+	 *
 	 * @param phone of patient.
 	 */
 	public void setPhone(String phone) {
