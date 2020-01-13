@@ -26,5 +26,13 @@ public class PatientConstants {
      */
     public static final String PATIENTS_DOCTORS = "allPatientsDoctors delegate initiated";
 
+    public static final String ERR_CRT_PAT = "Error occurred Creating patient";
+
+    public static final String ERR_RED_PAT = "Error occurred Creating patient";
+
+    public static final String ERR_UPD_PAT = "Error occurred Creating patient";
+
+    public static final String ERR_DOC_PAT = "Error occurred Creating patient";
+
 
 }

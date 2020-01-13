@@ -83,19 +83,19 @@ public class PatientDao {
     /**
      * Gets patient record.
      *
-     * @param patientName of user.
+     * @param patientID the patient id
      * @return patient record.
-     * @throws SQLException          the sql exception
+     * @throws SQLException the sql exception
      */
-    public PatientRecord getPatientRecord(String patientName) throws SQLException {
+    public PatientRecord getPatientRecord(int patientID) throws SQLException {
         LOGGER.info(PatientConstant.READ_PATIENT);
-        LOGGER.traceEntry(patientName);
+        LOGGER.traceEntry(String.valueOf(patientID));
         PatientRecord record = null;
         try {
             record = new PatientRecord();
             PreparedStatement statement = connection
                     .prepareStatement(SQL_QUERIES.getString(PatientConstants.PATIENT_RECORD));
-            statement.setString(PatientConstants.ONE, patientName);
+            statement.setInt(PatientConstants.ONE, patientID);
             ResultSet result = statement.executeQuery();
             if (result.next()) {
                 record.setId(result.getInt(PatientConstants.ONE));
@@ -191,19 +191,19 @@ public class PatientDao {
     /**
      * Gets all doctors.
      *
-     * @param patientName the patient name
+     * @param patientID the patient id
      * @return the all doctors
      * @throws SQLException the sql exception
      */
-    public List<DoctorRecord> getAllDoctors(String patientName) throws SQLException {
+    public List<DoctorRecord> getAllDoctors(int patientID) throws SQLException {
         LOGGER.info(PatientConstant.PATIENT_DOCTOR);
-        LOGGER.traceEntry(patientName);
+        LOGGER.traceEntry(String.valueOf(patientID));
         List<DoctorRecord> recordists = new ArrayList<>();
 
         try {
             PreparedStatement statement = connection
                     .prepareStatement(SQL_QUERIES.getString(PatientConstants.PATIENT_DOCTORS));
-            statement.setString(PatientConstants.ONE, patientName);
+            statement.setInt(PatientConstants.ONE, patientID);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 DoctorRecord record = new DoctorRecord();
@@ -225,5 +225,32 @@ public class PatientDao {
         return recordists;
     }
 
+    /**
+     * Delete patient boolean.
+     *
+     * @param PatientID the patient id
+     * @return the boolean
+     * @throws SQLException the sql exception
+     */
+    public boolean deletePatient(int PatientID) throws SQLException {
+        LOGGER.info(PatientConstant.READ_PATIENT);
+        LOGGER.traceEntry(String.valueOf(PatientID));
+        try {
+            PreparedStatement statement = connection
+                    .prepareStatement(SQL_QUERIES.getString(PatientConstants.PATIENT_DELETE));
+            statement.setInt(PatientConstants.ONE, PatientID);
+            int result = statement.executeUpdate();
+            if (result < 1) {
+                return false;
+            }
+            LOGGER.traceExit(result);
+        } catch (SQLException exception) {
+            LOGGER.error(PatientConstant.ERR_PAT_RED, exception);
+            throw exception;
+        } catch (Exception exception) {
+            LOGGER.error(exception.getMessage());
+        }
+        return true;
+    }
 }
 

@@ -3,11 +3,16 @@ package global.coda.hms.helpers.doctor;
 import global.coda.hms.bean.DoctorRecord;
 import global.coda.hms.bean.PatientRecord;
 import global.coda.hms.dao.doctor.DoctorDao;
+import global.coda.hms.exceptionmappers.BusinessException;
+import global.coda.hms.exceptionmappers.SystemException;
+import global.coda.hms.exceptionmappers.UserNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The type Doctor helper.
@@ -98,17 +103,23 @@ public class DoctorHelper {
     }
 
     /**
-     * Gets all p doctors patients.
+     * Read all doctors patients helper map.
      *
-     * @return the all p doctors patients
-     * @throws SQLException the sql exception
+     * @return the map
+     * @throws SystemException   the system exception
+     * @throws BusinessException the business exception
      */
-    public List<String> getAllDoctorsName() throws SQLException {
-        LOGGER.traceEntry();
-        LOGGER.info(DoctorConstant.PATIENTS_DOCTORS);
-        List<String> result = doctorDao.getAllDoctorsName();
-        LOGGER.traceExit(result);
-        return result;
+    public Map<Integer, DoctorRecord> readAllDoctorsPatientsHelper() throws SystemException, BusinessException {
+        Map<Integer, DoctorRecord> doctorMap;
+        try {
+            doctorMap = doctorDao.readAllDoctorsPatients();
+            if (doctorMap.get(1).getId() == -1) {
+                throw new BusinessException();
+            }
+        } catch (SQLException e) {
+            throw new SystemException(e.getMessage());
+        }
+        return doctorMap;
     }
 
 }

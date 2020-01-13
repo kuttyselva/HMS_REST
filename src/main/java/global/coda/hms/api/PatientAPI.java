@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -87,6 +88,7 @@ public class PatientAPI {
      * @param phone    the phone
      * @param disease  the disease
      * @param password the password
+     * @param id       the id
      * @return the json object
      * @throws SystemException   the system exception
      * @throws BusinessException the business exception
@@ -96,7 +98,7 @@ public class PatientAPI {
     @Produces(MediaType.APPLICATION_JSON)
     public JSONObject editPatient(@FormParam("name") String name, @FormParam("age") int age,
                                   @FormParam("location") String location, @FormParam("phone") String phone,
-                                  @FormParam("disease") String disease, @FormParam("password") String password) throws SystemException, BusinessException {
+                                  @FormParam("disease") String disease, @FormParam("password") String password, @FormParam("id") int id) throws SystemException, BusinessException {
         LOGGER.traceEntry(name, age, location, phone, disease);
         String message;
         record.setAge(age);
@@ -105,7 +107,7 @@ public class PatientAPI {
         record.setPhone(phone);
         record.setPassword(password);
         record.setLocation(location);
-        record.setId(patientDelegate.readPatient(name).getId());
+        record.setId(id);
         if (patientDelegate.updatePatient(record)) {
             message = "updated successfully";
             jsonobject.put("status", ResponseStatus.OK);
@@ -122,21 +124,21 @@ public class PatientAPI {
     /**
      * ReadPatient json object.
      *
-     * @param patientName to get data.
+     * @param patientID the patient id
      * @return patient data.
      * @throws SystemException   the system exception
      * @throws BusinessException the business exception
      */
     @GET
-    @Path("/patientData/{patientName}")
+    @Path("/patientData/{patientID}")
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONObject readPatient(@PathParam("patientName") String patientName) throws SystemException, BusinessException {
-        LOGGER.traceEntry(patientName);
+    public JSONObject readPatient(@PathParam("patientID") int patientID) throws SystemException, BusinessException {
+        LOGGER.traceEntry(String.valueOf(patientID));
         String message;
-        if (patientName.length() < 2) {
+        if (patientID == -1) {
             throw new BusinessException();
         }
-        record = patientDelegate.readPatient(patientName);
+        record = patientDelegate.readPatient(patientID);
         if (record != null) {
             jsonobject.put("status", ResponseStatus.OK);
             jsonobject.put("message", record);
@@ -153,19 +155,19 @@ public class PatientAPI {
     /**
      * Gets patients doctors.
      *
-     * @param patientName the branch name
+     * @param patientID the patient id
      * @return the patients doctors
      * @throws SystemException   the system exception
      * @throws BusinessException the business exception
      */
     @GET
-    @Path("/{patientName}/getAllDoctors")
+    @Path("/{patientID}/getAllDoctors")
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONObject getPatientsDoctors(@PathParam("patientName") String patientName) throws SystemException, BusinessException {
-        LOGGER.traceEntry(patientName);
+    public JSONObject getPatientsDoctors(@PathParam("patientID") int patientID) throws SystemException, BusinessException {
+        LOGGER.traceEntry(String.valueOf(patientID));
         String message = "";
         List<DoctorRecord> doctorRecordList;
-        doctorRecordList = patientDelegate.PatientDoctors(patientName);
+        doctorRecordList = patientDelegate.PatientDoctors(patientID);
         if (doctorRecordList != null) {
             jsonobject.put("status", ResponseStatus.OK);
             jsonobject.put("message", doctorRecordList);
@@ -175,6 +177,31 @@ public class PatientAPI {
             jsonobject.put("message", message);
         }
         LOGGER.traceExit(jsonobject);
+        return jsonobject;
+    }
+
+    /**
+     * Delete patient json object.
+     *
+     * @param patientID the patient id
+     * @return the json object
+     * @throws BusinessException the business exception
+     * @throws SystemException   the system exception
+     */
+    @DELETE
+    @Path("/delete/{patientID}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public JSONObject deletePatient(@PathParam("patientID") int patientID) throws BusinessException, SystemException {
+        LOGGER.traceEntry(String.valueOf(patientID));
+        String message;
+        if (patientDelegate.deletePatient(patientID)) {
+            jsonobject.put("status", ResponseStatus.OK);
+            jsonobject.put("message", String.format("deleted %d", patientID));
+        } else {
+            message = "user not found";
+            jsonobject.put("status", ResponseStatus.BAD_REQUEST);
+            jsonobject.put("message", message);
+        }
         return jsonobject;
     }
 

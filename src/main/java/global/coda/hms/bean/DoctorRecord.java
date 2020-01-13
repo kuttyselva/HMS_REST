@@ -1,66 +1,36 @@
 package global.coda.hms.bean;
 
+import java.util.List;
+
 /**
  * The type Doctor record.
  *
  * @author VC
  */
-public class DoctorRecord {
-    private int id;
-    private int age;
-    private String name;
-    private String location;
-    private String password;
-    private String phone;
+public class DoctorRecord extends UserRecord {
+
     private String speciality;
 
 	/**
-	 * gets id.
+	 * Gets patient list.
 	 *
-	 * @return id userId.
+	 * @return the patient list
 	 */
-	public int getId() {
-        return id;
-    }
+	public List<PatientRecord> getPatientList() {
+		return patientList;
+	}
 
 	/**
-	 * Is empty boolean.
+	 * Sets patient list.
 	 *
-	 * @return the boolean
+	 * @param patientList the patient list
 	 */
-	public boolean isEmpty() {
-        if (name == null || password == null || id == -1 || location == null || age == -1 || phone == null) {
-            return true;
-        }
-        return false;
-    }
+	public void setPatientList(List<PatientRecord> patientList) {
+		this.patientList = patientList;
+	}
 
-	/**
-	 * gets age.
-	 *
-	 * @return age users age.
-	 */
-	public int getAge() {
-        return age;
-    }
+	private List<PatientRecord> patientList;
 
-	/**
-	 * sets id.
-	 *
-	 * @param id userid.
-	 */
-	public void setId(int id) {
-        this.id = id;
-    }
-
-	/**
-	 * sets age.
-	 *
-	 * @param age user age.
-	 */
-	public void setAge(int age) {
-        this.age = age;
-    }
 
 	/**
 	 * gets speciality.
@@ -79,83 +49,5 @@ public class DoctorRecord {
 	public void setSpeciality(String speciality) {
         this.speciality = speciality;
     }
-
-    @Override
-    public String toString() {
-        return "DoctorRecord{" + "age='" + age + '\'' + ", name='" + name + '\'' + ", location='" + location + '\''
-                + ", password='" + password + '\'' + ", phone='" + phone + '\'' + '}';
-    }
-
-	/**
-	 * gets name.
-	 *
-	 * @return name name of doc.
-	 */
-	public String getName() {
-        return name;
-    }
-
-	/**
-	 * sets name.
-	 *
-	 * @param name name of doc
-	 */
-	public void setName(String name) {
-        this.name = name;
-    }
-
-	/**
-	 * gets location.
-	 *
-	 * @return location location of doc.
-	 */
-	public String getLocation() {
-        return location;
-    }
-
-	/**
-	 * sets location.
-	 *
-	 * @param location loc of doc
-	 */
-	public void setLocation(String location) {
-        this.location = location;
-    }
-
-	/**
-	 * gets password.
-	 *
-	 * @return password password of doc.
-	 */
-	public String getPassword() {
-        return password;
-    }
-
-	/**
-	 * sets password.
-	 *
-	 * @param password doc password.
-	 */
-	public void setPassword(String password) {
-        this.password = password;
-    }
-
-	/**
-	 * gets phone.
-	 *
-	 * @return phone phone number of doc.
-	 */
-	public String getPhone() {
-        return phone;
-    }
-
-	/**
-	 * sets phone.
-	 *
-	 * @param phone doc phone number.
-	 */
-	public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
 }
+

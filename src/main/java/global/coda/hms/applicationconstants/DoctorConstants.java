@@ -69,6 +69,6 @@ public class DoctorConstants {
      */
     public static final String DOCTORS_PATIENT = "DOPC001Q";
 
-    public static final String DOCTORS = "DONA000Q";
+    public static final String DOCTORS_PATIENTS = "DCPT000Q";
 
 }

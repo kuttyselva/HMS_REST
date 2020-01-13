@@ -14,5 +14,9 @@ public class ExceptionConstants {
      */
     public static final String ERR_USER_NOT_UPDATE = "User data cannot be Update";
 
+    public static final String ERR_USER_NOT_CREATE = "User data cannot be Created";
+
+    public static final String ERR_USER_NOT_DELETE = "User data cannot be Deleted";
+
 
 }

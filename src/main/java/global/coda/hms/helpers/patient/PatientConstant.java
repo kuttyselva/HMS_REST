@@ -21,4 +21,6 @@ public class PatientConstant {
      */
     public static final String PATIENT_DOCTOR = "PatientsDoctor helper initiated";
 
+    public static final String PATIENT_DELETE = "Delete Patient helper initiated";
+
 }

@@ -1,7 +1,6 @@
 package global.coda.hms.api;
 
 import global.coda.hms.applicationconstants.ResponseStatus;
-import global.coda.hms.bean.DoctorPatientsList;
 import global.coda.hms.bean.DoctorRecord;
 import global.coda.hms.bean.PatientRecord;
 import global.coda.hms.delegates.doctor.DoctorDelegate;
@@ -11,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -19,7 +19,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -177,25 +176,25 @@ public class DoctorAPI {
         LOGGER.traceExit(jsonobject);
         return jsonobject;
     }
+//
 
     /**
      * Gets all doctors.
      *
      * @return the all doctors
-     * @throws SystemException   the system exception
      * @throws BusinessException the business exception
+     * @throws SystemException   the system exception
      */
-    @GET
-    @Path("/getAllPatients")
+    @POST
+    @Path("all/patient")
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONObject getAllDoctorsPatients() throws SystemException {
-        LOGGER.traceEntry();
-        List<DoctorPatientsList> doctorPatientsLists;
-        doctorPatientsLists = doctorDelegate.getAllDoctorsPatients();
-        LOGGER.info(doctorPatientsLists);
-        jsonobject.put("patientData", doctorPatientsLists);
-
-        LOGGER.traceExit(jsonobject);
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public JSONObject getAllDoctorsPatient() throws BusinessException, SystemException {
+        List<DoctorRecord> doctorPatientsLists;
+        doctorPatientsLists = doctorDelegate.readAllDoctorsPatientsDelegate();
+        jsonobject.put("status", ResponseStatus.OK);
+        jsonobject.put("message", doctorPatientsLists);
+        LOGGER.trace(jsonobject);
         return jsonobject;
     }
 }

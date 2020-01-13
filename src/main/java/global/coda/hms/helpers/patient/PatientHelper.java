@@ -38,12 +38,21 @@ public class PatientHelper {
      *
      * @param record the record
      * @return the boolean
-     * @throws SQLException the sql exception
+     * @throws BusinessException the business exception
+     * @throws SystemException   the system exception
      */
-    public boolean createPatient(PatientRecord record) throws SQLException {
+    public boolean createPatient(PatientRecord record) throws BusinessException, SystemException {
         LOGGER.info(PatientConstant.CREATE_PATIENT);
         LOGGER.traceEntry(record.toString());
-        return patientdao.createPatientRecord(record);
+        try {
+            if (patientdao.createPatientRecord(record)) {
+                return true;
+            } else {
+                throw new BusinessException(ExceptionConstants.ERR_USER_NOT_CREATE);
+            }
+        } catch (SQLException e) {
+            throw new SystemException(e.getMessage());
+        }
     }
 
     /**
@@ -74,17 +83,17 @@ public class PatientHelper {
     /**
      * Read patient patient record.
      *
-     * @param patientName to get data.
+     * @param patientID the patient id
      * @return record of patient.
      * @throws SystemException   the system exception
      * @throws BusinessException the business exception
      */
-    public PatientRecord readPatient(String patientName) throws SystemException, BusinessException {
+    public PatientRecord readPatient(int patientID) throws SystemException, BusinessException {
         LOGGER.info(PatientConstant.READ_PATIENT);
-        LOGGER.traceEntry(patientName);
+        LOGGER.traceEntry(String.valueOf(patientID));
         PatientRecord patientRecord;
         try {
-            patientRecord = patientdao.getPatientRecord(patientName);
+            patientRecord = patientdao.getPatientRecord(patientID);
         } catch (SQLException exception) {
             throw new SystemException(exception.getMessage());
         }
@@ -110,20 +119,41 @@ public class PatientHelper {
         return result;
     }
 
+    /**
+     * Delete patient boolean.
+     *
+     * @param patientID the patient id
+     * @return the boolean
+     * @throws SystemException   the system exception
+     * @throws BusinessException the business exception
+     */
+    public boolean deletePatient(int patientID) throws SystemException, BusinessException {
+        LOGGER.info(PatientConstant.PATIENT_DELETE);
+        LOGGER.traceEntry(String.valueOf(patientID));
+        try {
+            if (patientdao.deletePatient(patientID)) {
+                return true;
+            } else {
+                throw new BusinessException(ExceptionConstants.ERR_USER_NOT_DELETE);
+            }
+        } catch (SQLException exception) {
+            throw new SystemException(exception.getMessage());
+        }
+    }
 
     /**
      * Gets all doctors.
      *
-     * @param patientName the patient name
+     * @param patientID the patient id
      * @return the all doctors
      * @throws SystemException   the system exception
      * @throws BusinessException the business exception
      */
-    public List<DoctorRecord> getAllDoctors(String patientName) throws SystemException, BusinessException {
+    public List<DoctorRecord> getAllDoctors(int patientID) throws SystemException, BusinessException {
         LOGGER.info(PatientConstant.PATIENT_DOCTOR);
-        LOGGER.traceEntry(patientName);
+        LOGGER.traceEntry(String.valueOf(patientID));
         try {
-            result = patientdao.getAllDoctors(patientName);
+            result = patientdao.getAllDoctors(patientID);
         } catch (SQLException e) {
             throw new SystemException(e.getMessage());
         }

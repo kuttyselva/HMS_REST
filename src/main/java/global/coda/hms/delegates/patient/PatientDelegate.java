@@ -1,5 +1,6 @@
 package global.coda.hms.delegates.patient;
 
+import global.coda.hms.applicationconstants.ExceptionConstants;
 import global.coda.hms.bean.DoctorRecord;
 import global.coda.hms.bean.PatientRecord;
 import global.coda.hms.exceptionmappers.BusinessException;
@@ -36,15 +37,8 @@ public class PatientDelegate {
      * @throws BusinessException the business exception
      */
     public boolean createPatient(PatientRecord record) throws SystemException, BusinessException {
-        if (record == null || record.isEmpty()) {
-            throw new BusinessException();
-        }
         LOGGER.info(PatientConstants.CREATE_PATIENT);
-        try {
-            return patientHelper.createPatient(record);
-        } catch (SQLException exception) {
-            throw new SystemException();
-        }
+        return patientHelper.createPatient(record);
     }
 
     /**
@@ -56,42 +50,59 @@ public class PatientDelegate {
      * @throws BusinessException the business exception
      */
     public boolean updatePatient(PatientRecord record) throws SystemException, BusinessException {
-        if (record == null || record.isEmpty()) {
-            throw new BusinessException();
-        }
         LOGGER.info(PatientConstants.UPDATE_PATIENT);
-        return patientHelper.updateUser(record);
+        if (patientHelper.updateUser(record)) {
+            return true;
+        } else {
+            throw new BusinessException(PatientConstants.ERR_UPD_PAT);
+        }
     }
 
     /**
      * Read patient patient record.
      *
-     * @param patientName the patient name
+     * @param patientID the patient id
      * @return the patient record
      * @throws SystemException   the system exception
      * @throws BusinessException the business exception
      */
-    public PatientRecord readPatient(String patientName) throws SystemException, BusinessException {
-        if (patientName.length() < 2) {
-            throw new BusinessException();
+    public PatientRecord readPatient(int patientID) throws SystemException, BusinessException {
+        if (patientID == -1) {
+            throw new BusinessException(ExceptionConstants.ERR_USER_NOT_FOUND);
         }
         LOGGER.info(PatientConstants.READ_PATIENT);
-        return patientHelper.readPatient(patientName);
+        return patientHelper.readPatient(patientID);
+    }
+
+    /**
+     * Delete patient boolean.
+     *
+     * @param patientID the patient id
+     * @return the boolean
+     * @throws SystemException   the system exception
+     * @throws BusinessException the business exception
+     */
+    public boolean deletePatient(int patientID) throws SystemException, BusinessException {
+        if (patientID == -1) {
+            throw new BusinessException(ExceptionConstants.ERR_USER_NOT_FOUND);
+        }
+        LOGGER.info(PatientConstants.READ_PATIENT);
+        return patientHelper.deletePatient(patientID);
     }
 
     /**
      * Patient doctors list.
      *
-     * @param patientName the patient name
+     * @param patientID the patient id
      * @return the list
      * @throws SystemException   the system exception
      * @throws BusinessException the business exception
      */
-    public List<DoctorRecord> PatientDoctors(String patientName) throws SystemException, BusinessException {
+    public List<DoctorRecord> PatientDoctors(int patientID) throws SystemException, BusinessException {
         LOGGER.info(PatientConstants.PATIENT_DOCTOR);
-        if (patientName.length() < 1) {
-            throw new BusinessException();
+        if (patientID == -1) {
+            throw new BusinessException(ExceptionConstants.ERR_USER_NOT_FOUND);
         }
-        return patientHelper.getAllDoctors(patientName);
+        return patientHelper.getAllDoctors(patientID);
     }
 }

@@ -26,7 +26,7 @@ public class PatientDaoTest {
     public void readPatient() throws SQLException, UserNotFoundException {
         PatientDao patientDao = new PatientDao();
         PatientRecord user = DaoTestConstants.getPatient();
-        PatientRecord patient = patientDao.getPatientRecord("selva");
+        PatientRecord patient = patientDao.getPatientRecord(1);
         assertEquals(user.toString(), patient.toString());
     }
 
@@ -52,6 +52,6 @@ public class PatientDaoTest {
     @Test
     public void patientDoctor() throws SQLException{
         PatientDao patientDao=new PatientDao();
-        assertEquals(patientDao.getAllDoctors(DaoTestConstants.createPatient().getName()),new ArrayList<>());
+        assertEquals(patientDao.getAllDoctors(DaoTestConstants.createPatient().getId()),new ArrayList<>());
     }
 }

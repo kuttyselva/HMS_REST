@@ -6,8 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import global.coda.hms.applicationconstants.DoctorConstants;
@@ -172,39 +174,39 @@ public class DoctorDao {
      * output list of patient records
      */
 
-    /**
-     * View doctor details list.
-     *
-     * @param branchName of doctor.
-     * @return true for success.
-     * @throws SQLException the sql exception
-     */
-    public List<PatientRecord> viewDoctorDetails(String branchName) throws SQLException {
-        LOGGER.traceEntry(branchName);
-        LOGGER.info(DoctorConstant.VIEW_PATIENT);
-        List<PatientRecord> recordlist = new ArrayList<>();
-        try {
-            PreparedStatement statement = connection
-                    .prepareStatement(QUERIES.getString(DoctorConstants.PATIENTS_IN_BRANCH));
-            statement.setString(DoctorConstants.ONE, branchName);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                PatientRecord record = new PatientRecord();
-                record.setName(resultSet.getString(DoctorConstants.ONE));
-                record.setDisease(resultSet.getString(DoctorConstants.TWO));
-                record.setLocation(resultSet.getString(DoctorConstants.THREE));
-                recordlist.add(record);
-            }
-
-        } catch (SQLException exception) {
-            LOGGER.error(DoctorConstant.ERR_DOC_RED, exception);
-            throw exception;
-        } catch (Exception exception) {
-            LOGGER.error(exception.getMessage());
-        }
-        LOGGER.traceExit(recordlist);
-        return recordlist;
-    }
+//    /**
+//     * View doctor details list.
+//     *
+//     * @param branchName of doctor.
+//     * @return true for success.
+//     * @throws SQLException the sql exception
+//     */
+//    public List<PatientRecord> viewDoctorDetails(String branchName) throws SQLException {
+//        LOGGER.traceEntry(branchName);
+//        LOGGER.info(DoctorConstant.VIEW_PATIENT);
+//        List<PatientRecord> recordlist = new ArrayList<>();
+//        try {
+//            PreparedStatement statement = connection
+//                    .prepareStatement(QUERIES.getString(DoctorConstants.PATIENTS_IN_BRANCH));
+//            statement.setString(DoctorConstants.ONE, branchName);
+//            ResultSet resultSet = statement.executeQuery();
+//            while (resultSet.next()) {
+//                PatientRecord record = new PatientRecord();
+//                record.setName(resultSet.getString(DoctorConstants.ONE));
+//                record.setDisease(resultSet.getString(DoctorConstants.TWO));
+//                record.setLocation(resultSet.getString(DoctorConstants.THREE));
+//                recordlist.add(record);
+//            }
+//
+//        } catch (SQLException exception) {
+//            LOGGER.error(DoctorConstant.ERR_DOC_RED, exception);
+//            throw exception;
+//        } catch (Exception exception) {
+//            LOGGER.error(exception.getMessage());
+//        }
+//        LOGGER.traceExit(recordlist);
+//        return recordlist;
+//    }
 
     /**
      * Gets all patients.
@@ -233,7 +235,7 @@ public class DoctorDao {
             }
 
         } catch (SQLException exception) {
-            LOGGER.error(DoctorConstant.ERR_DOC_DOC, exception);
+            LOGGER.error(DoctorConstant.ERR_DOC_PAT, exception);
             throw exception;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
@@ -242,28 +244,44 @@ public class DoctorDao {
         return recordists;
     }
 
+
     /**
-     * Gets all patients for doctors.
+     * Read all doctors patients map.
      *
-     * @return the all patients for doctors
+     * @return the map
      * @throws SQLException the sql exception
      */
-    public List<String> getAllDoctorsName() throws SQLException {
-        List<String> doctorNames = new ArrayList<>();
-        try {
-            PreparedStatement statement = connection
-                    .prepareStatement(SQL_QUERIES.getString(DoctorConstants.DOCTORS));
-            ResultSet resultset = statement.executeQuery();
-            while (resultset.next()) {
-                doctorNames.add(resultset.getString(DoctorConstants.ONE));
+    public Map<Integer, DoctorRecord> readAllDoctorsPatients() throws SQLException {
+        LOGGER.info(DoctorConstant.DOCTORS_PATIENT);
+        Map<Integer, DoctorRecord> doctorMap = new HashMap<>();
+        PreparedStatement statement = connection.prepareStatement(SQL_QUERIES.getString(DoctorConstants.DOCTORS_PATIENTS));
+        ResultSet resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            List<PatientRecord> patientList;
+            DoctorRecord doctor = new DoctorRecord();
+            PatientRecord patient = new PatientRecord();
+
+            doctor.setId(resultSet.getInt(DoctorConstants.ONE));
+            patient.setId(resultSet.getInt(DoctorConstants.TWO));
+            patient.setName(resultSet.getString(DoctorConstants.FOUR));
+            patient.setAge(resultSet.getInt(DoctorConstants.FIVE));
+            patient.setDisease(resultSet.getString(DoctorConstants.THREE));
+            patient.setLocation(resultSet.getString(DoctorConstants.SIX));
+            if (!doctorMap.containsKey(doctor.getId())) {
+                patientList = new ArrayList<>();
+                patientList.add(patient);
+                doctor.setPatientList(patientList);
+                doctorMap.put(doctor.getId(), doctor);
+
+            } else {
+                doctor = doctorMap.get(doctor.getId());
+                patientList = doctor.getPatientList();
+                patientList.add(patient);
             }
-        } catch (SQLException exception) {
-            LOGGER.error(DoctorConstant.ERR_DOC_DOC, exception);
-            throw exception;
-        } catch (Exception exception) {
-            LOGGER.error(exception.getMessage());
+            LOGGER.trace(doctorMap);
         }
-        LOGGER.traceExit(doctorNames);
-        return doctorNames;
+
+
+        return doctorMap;
     }
 }

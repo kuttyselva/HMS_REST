@@ -16,6 +16,7 @@ public class PatientConstants {
     public static final String DOCTOR_IN_BRANCH = "DOCB004Q";
 
     public static final String PATIENT_UPDATE = "PERUPD0Q";
+    public static final String PATIENT_DELETE = "PADL000Q";
     public static final String PATIENT_TABLE_UPDATE = "PATUP00Q";
     public static final String PATIENT_RECORD = "PATDET0Q";
     public static final String PATIENT_CREATE_USER = "PATCU00Q";

@@ -1,6 +1,5 @@
 package global.coda.hms.delegates.doctor;
 
-import global.coda.hms.bean.DoctorPatientsList;
 import global.coda.hms.bean.DoctorRecord;
 import global.coda.hms.bean.PatientRecord;
 import global.coda.hms.delegates.patient.PatientConstants;
@@ -12,7 +11,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The type Doctor delegate.
@@ -39,9 +40,6 @@ public class DoctorDelegate {
      * @throws BusinessException the business exception
      */
     public boolean createDoctor(DoctorRecord record) throws SystemException, BusinessException {
-        if (record == null || record.isEmpty()) {
-            throw new BusinessException();
-        }
         LOGGER.info(DoctorConstants.CREATE_DOCTOR);
         try {
             return doctorHelper.createDoctor(record);
@@ -59,9 +57,6 @@ public class DoctorDelegate {
      * @throws SystemException   the system exception
      */
     public boolean updateDoctor(DoctorRecord record) throws BusinessException, SystemException {
-        if (record == null || record.isEmpty()) {
-            throw new BusinessException();
-        }
         LOGGER.info(DoctorConstants.CREATE_DOCTOR);
         try {
             return doctorHelper.updateDoctor(record);
@@ -125,30 +120,25 @@ public class DoctorDelegate {
     }
 
     /**
-     * Gets all doctors patients.
+     * Read all doctors patients delegate list.
      *
-     * @return the all doctors patients
+     * @return the list
+     * @throws BusinessException the business exception
      * @throws SystemException   the system exception
      */
-    public List<DoctorPatientsList> getAllDoctorsPatients() throws SystemException {
-        LOGGER.info(PatientConstants.PATIENTS_DOCTORS);
-        List<String> doctorNames;
-        DoctorPatientsList doctorPatientsList = new DoctorPatientsList();
-        List<DoctorPatientsList> doctorPatientsLists = new ArrayList<>();
-        try {
-            doctorNames = doctorHelper.getAllDoctorsName();
-            for (String doctorName : doctorNames) {
-                doctorPatientsList.setDoctorName(doctorName);
-                doctorPatientsList.setRecord(getAllPatients(doctorName));
-                LOGGER.traceExit(doctorPatientsList.getRecord());
-                doctorPatientsLists.add(doctorPatientsList);
-            }
-        } catch (SQLException | BusinessException exception) {
-            throw new SystemException();
-        }
-        LOGGER.traceExit(doctorPatientsLists);
+    public List<DoctorRecord> readAllDoctorsPatientsDelegate() throws BusinessException, SystemException {
 
-        return doctorPatientsLists;
+        Map<Integer, DoctorRecord> doctorMap = new HashMap<Integer, DoctorRecord>();
+        doctorMap = doctorHelper.readAllDoctorsPatientsHelper();
+        List<DoctorRecord> doctorList = new ArrayList<>();
+        for (Map.Entry<Integer, DoctorRecord> doctor : doctorMap.entrySet()) {
+
+            doctorList.add(doctor.getValue());
+
+        }
+
+
+        return doctorList;
     }
 
 
