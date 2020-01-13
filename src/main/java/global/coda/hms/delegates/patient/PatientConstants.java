@@ -21,4 +21,10 @@ public class PatientConstants {
      */
     public static final String PATIENT_DOCTOR = "PatientsDoctor delegate initiated";
 
+    /**
+     * The constant PATIENTS_DOCTORS.
+     */
+    public static final String PATIENTS_DOCTORS = "allPatientsDoctors delegate initiated";
+
+
 }

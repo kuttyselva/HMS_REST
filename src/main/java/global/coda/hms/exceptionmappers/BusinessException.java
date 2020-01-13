@@ -37,11 +37,20 @@ BusinessException extends Exception implements ExceptionMapper<BusinessException
 	}
 
 	/**
+	 * Instantiates a new Business exception.
+	 *
+	 * @param exception the exception
+	 */
+	public BusinessException(UserNotFoundException exception) {
+
+    }
+
+    /**
 	 *
 	 */
 	@Override
 	public Response toResponse(BusinessException exception) {
-		return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(exception.getMessage())
+		return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).entity(exception.getMessage())
 				.type(MediaType.TEXT_PLAIN).build();
 	}
 

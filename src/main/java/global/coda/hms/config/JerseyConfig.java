@@ -19,6 +19,5 @@ public class JerseyConfig extends ResourceConfig {
         register(DoctorAPI.class);
         register(BusinessException.class);
         register(SystemException.class);
-
     }
 }

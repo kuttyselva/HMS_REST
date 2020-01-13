@@ -60,11 +60,7 @@ public class PatientDelegate {
             throw new BusinessException();
         }
         LOGGER.info(PatientConstants.UPDATE_PATIENT);
-        try {
-            return patientHelper.updateUser(record);
-        } catch (SQLException e) {
-            throw new SystemException();
-        }
+        return patientHelper.updateUser(record);
     }
 
     /**
@@ -77,14 +73,10 @@ public class PatientDelegate {
      */
     public PatientRecord readPatient(String patientName) throws SystemException, BusinessException {
         if (patientName.length() < 2) {
-             throw new BusinessException();
+            throw new BusinessException();
         }
         LOGGER.info(PatientConstants.READ_PATIENT);
-        try {
-            return patientHelper.readPatient(patientName);
-        } catch (SQLException e) {
-            throw new SystemException();
-        }
+        return patientHelper.readPatient(patientName);
     }
 
     /**
@@ -100,10 +92,6 @@ public class PatientDelegate {
         if (patientName.length() < 1) {
             throw new BusinessException();
         }
-        try {
-            return patientHelper.getAllDoctors(patientName);
-        } catch (SQLException e) {
-            throw new SystemException();
-        }
+        return patientHelper.getAllDoctors(patientName);
     }
 }

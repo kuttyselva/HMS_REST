@@ -11,11 +11,9 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 /**
+ * The type System exception.
  *
- * @author kutty
- *
- * Thrown in case of system errors
- *
+ * @author kutty  Thrown in case of system errors
  */
 @Provider
 public class SystemException extends Exception implements ExceptionMapper<SystemException> {
@@ -26,6 +24,19 @@ public class SystemException extends Exception implements ExceptionMapper<System
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = LogManager.getLogger(SystemException.class);
 
+	/**
+	 * Instantiates a new System exception.
+	 *
+	 * @param message the message
+	 */
+	public SystemException(String message) {
+    	super(message);
+    }
+
+	public SystemException() {
+
+	}
+
 
 	/**
 	 *
@@ -33,7 +44,7 @@ public class SystemException extends Exception implements ExceptionMapper<System
 	@Override
 	public Response toResponse(SystemException exception) {
 		LOGGER.error(exception.getMessage());
-		return Response.status(Integer.parseInt(ResponseStatus.SERVER_ERROR)).entity("Something bad occurred")
+		return Response.status(Integer.parseInt(ResponseStatus.SERVER_ERROR)).entity(exception.getMessage())
 				.type("text/plain").build();
 	}
 

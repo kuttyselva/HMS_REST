@@ -68,4 +68,7 @@ public class DoctorConstants {
      * The constant DOCTORS_PATIENT.
      */
     public static final String DOCTORS_PATIENT = "DOPC001Q";
+
+    public static final String DOCTORS = "DONA000Q";
+
 }

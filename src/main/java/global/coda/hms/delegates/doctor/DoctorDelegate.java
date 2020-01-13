@@ -1,5 +1,6 @@
 package global.coda.hms.delegates.doctor;
 
+import global.coda.hms.bean.DoctorPatientsList;
 import global.coda.hms.bean.DoctorRecord;
 import global.coda.hms.bean.PatientRecord;
 import global.coda.hms.delegates.patient.PatientConstants;
@@ -10,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,7 +38,7 @@ public class DoctorDelegate {
      * @throws SystemException   the system exception
      * @throws BusinessException the business exception
      */
-    public boolean createDoctor(DoctorRecord record) throws  SystemException, BusinessException {
+    public boolean createDoctor(DoctorRecord record) throws SystemException, BusinessException {
         if (record == null || record.isEmpty()) {
             throw new BusinessException();
         }
@@ -120,6 +122,33 @@ public class DoctorDelegate {
         } catch (SQLException e) {
             throw new SystemException();
         }
+    }
+
+    /**
+     * Gets all doctors patients.
+     *
+     * @return the all doctors patients
+     * @throws SystemException   the system exception
+     */
+    public List<DoctorPatientsList> getAllDoctorsPatients() throws SystemException {
+        LOGGER.info(PatientConstants.PATIENTS_DOCTORS);
+        List<String> doctorNames;
+        DoctorPatientsList doctorPatientsList = new DoctorPatientsList();
+        List<DoctorPatientsList> doctorPatientsLists = new ArrayList<>();
+        try {
+            doctorNames = doctorHelper.getAllDoctorsName();
+            for (String doctorName : doctorNames) {
+                doctorPatientsList.setDoctorName(doctorName);
+                doctorPatientsList.setRecord(getAllPatients(doctorName));
+                LOGGER.traceExit(doctorPatientsList.getRecord());
+                doctorPatientsLists.add(doctorPatientsList);
+            }
+        } catch (SQLException | BusinessException exception) {
+            throw new SystemException();
+        }
+        LOGGER.traceExit(doctorPatientsLists);
+
+        return doctorPatientsLists;
     }
 
 

@@ -3,6 +3,7 @@ package global.coda.hms.dao;
 import global.coda.hms.bean.PatientRecord;
 import global.coda.hms.constants.DaoTestConstants;
 import global.coda.hms.dao.patient.PatientDao;
+import global.coda.hms.exceptionmappers.UserNotFoundException;
 import org.junit.Test;
 
 import java.sql.SQLException;
@@ -22,7 +23,7 @@ public class PatientDaoTest {
      * @throws SQLException thrown in case of sql errors
      */
     @Test
-    public void readPatient() throws SQLException {
+    public void readPatient() throws SQLException, UserNotFoundException {
         PatientDao patientDao = new PatientDao();
         PatientRecord user = DaoTestConstants.getPatient();
         PatientRecord patient = patientDao.getPatientRecord("selva");

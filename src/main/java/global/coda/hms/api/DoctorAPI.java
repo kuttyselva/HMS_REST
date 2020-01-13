@@ -1,6 +1,7 @@
 package global.coda.hms.api;
 
 import global.coda.hms.applicationconstants.ResponseStatus;
+import global.coda.hms.bean.DoctorPatientsList;
 import global.coda.hms.bean.DoctorRecord;
 import global.coda.hms.bean.PatientRecord;
 import global.coda.hms.delegates.doctor.DoctorDelegate;
@@ -18,6 +19,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -172,6 +174,27 @@ public class DoctorAPI {
             jsonobject.put("status", ResponseStatus.BAD_REQUEST);
             jsonobject.put("message", message);
         }
+        LOGGER.traceExit(jsonobject);
+        return jsonobject;
+    }
+
+    /**
+     * Gets all doctors.
+     *
+     * @return the all doctors
+     * @throws SystemException   the system exception
+     * @throws BusinessException the business exception
+     */
+    @GET
+    @Path("/getAllPatients")
+    @Produces(MediaType.APPLICATION_JSON)
+    public JSONObject getAllDoctorsPatients() throws SystemException {
+        LOGGER.traceEntry();
+        List<DoctorPatientsList> doctorPatientsLists;
+        doctorPatientsLists = doctorDelegate.getAllDoctorsPatients();
+        LOGGER.info(doctorPatientsLists);
+        jsonobject.put("patientData", doctorPatientsLists);
+
         LOGGER.traceExit(jsonobject);
         return jsonobject;
     }

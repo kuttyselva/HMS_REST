@@ -97,4 +97,18 @@ public class DoctorHelper {
         return result;
     }
 
+    /**
+     * Gets all p doctors patients.
+     *
+     * @return the all p doctors patients
+     * @throws SQLException the sql exception
+     */
+    public List<String> getAllDoctorsName() throws SQLException {
+        LOGGER.traceEntry();
+        LOGGER.info(DoctorConstant.PATIENTS_DOCTORS);
+        List<String> result = doctorDao.getAllDoctorsName();
+        LOGGER.traceExit(result);
+        return result;
+    }
+
 }

@@ -27,7 +27,7 @@ public class PatientDao {
      *
      * @throws SQLException the sql exception
      */
-    public PatientDao() throws  SQLException {
+    public PatientDao() throws SQLException {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -85,7 +85,7 @@ public class PatientDao {
      *
      * @param patientName of user.
      * @return patient record.
-     * @throws SQLException the sql exception
+     * @throws SQLException          the sql exception
      */
     public PatientRecord getPatientRecord(String patientName) throws SQLException {
         LOGGER.info(PatientConstant.READ_PATIENT);
@@ -105,7 +105,7 @@ public class PatientDao {
                 record.setPhone(result.getString(PatientConstants.FIVE));
                 record.setDisease(result.getString(PatientConstants.SIX));
             }
-            LOGGER.traceEntry(record.toString());
+            LOGGER.traceExit(record.toString());
             return record;
 
         } catch (SQLException exception) {
@@ -114,8 +114,7 @@ public class PatientDao {
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
         }
-        assert record != null;
-        LOGGER.traceEntry(record.toString());
+        LOGGER.traceExit(record);
         return record;
     }
 
@@ -179,7 +178,7 @@ public class PatientDao {
                 recordists.add(record);
             }
 
-        }  catch (SQLException exception) {
+        } catch (SQLException exception) {
             LOGGER.error(PatientConstant.ERR_PAT_RED, exception);
             throw exception;
         } catch (Exception exception) {
@@ -216,7 +215,7 @@ public class PatientDao {
                 recordists.add(record);
             }
 
-        }  catch (SQLException exception) {
+        } catch (SQLException exception) {
             LOGGER.error(PatientConstant.ERR_PAT_DOC, exception);
             throw exception;
         } catch (Exception exception) {

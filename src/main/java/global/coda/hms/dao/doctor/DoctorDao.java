@@ -41,7 +41,7 @@ public class DoctorDao {
      *
      * @throws SQLException the sql exception
      */
-    public DoctorDao() throws  SQLException {
+    public DoctorDao() throws SQLException {
         super();
     }
     /*
@@ -229,7 +229,6 @@ public class DoctorDao {
                 record.setDisease(resultSet.getString(DoctorConstants.TWO));
                 record.setLocation(resultSet.getString(DoctorConstants.THREE));
                 record.setPhone(resultSet.getString(DoctorConstants.FOUR));
-
                 recordists.add(record);
             }
 
@@ -243,6 +242,28 @@ public class DoctorDao {
         return recordists;
     }
 
+    /**
+     * Gets all patients for doctors.
+     *
+     * @return the all patients for doctors
+     * @throws SQLException the sql exception
+     */
+    public List<String> getAllDoctorsName() throws SQLException {
+        List<String> doctorNames = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection
+                    .prepareStatement(SQL_QUERIES.getString(DoctorConstants.DOCTORS));
+            ResultSet resultset = statement.executeQuery();
+            while (resultset.next()) {
+                doctorNames.add(resultset.getString(DoctorConstants.ONE));
+            }
+        } catch (SQLException exception) {
+            LOGGER.error(DoctorConstant.ERR_DOC_DOC, exception);
+            throw exception;
+        } catch (Exception exception) {
+            LOGGER.error(exception.getMessage());
+        }
+        LOGGER.traceExit(doctorNames);
+        return doctorNames;
+    }
 }
-
-
