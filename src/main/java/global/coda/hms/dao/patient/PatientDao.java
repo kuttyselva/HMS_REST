@@ -77,6 +77,7 @@ public class PatientDao {
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
         }
+        LOGGER.traceExit(result);
         return result > 0;
     }
 
@@ -148,6 +149,7 @@ public class PatientDao {
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
         }
+        LOGGER.traceExit(result);
         return result > 0;
 
     }
@@ -211,10 +213,8 @@ public class PatientDao {
                 record.setSpeciality(resultSet.getString(PatientConstants.TWO));
                 record.setLocation(resultSet.getString(PatientConstants.THREE));
                 record.setPhone(resultSet.getString(PatientConstants.FOUR));
-
                 recordists.add(record);
             }
-
         } catch (SQLException exception) {
             LOGGER.error(PatientConstant.ERR_PAT_DOC, exception);
             throw exception;
