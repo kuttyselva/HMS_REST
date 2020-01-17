@@ -23,5 +23,12 @@ public class PatientConstants {
     public static final String PATIENT_CREATE_PATIENT = "PATCP00Q";
     public static final String PATIENT_DOCTORS = "PADC001Q";
 
+//DAO ERRORS
 
+    public static final String ERR_PAT_CRT = "Error occurred in Creating Patient";
+
+    public static final String ERR_PAT_RED = "Error occurred in Reading Patient";
+
+    public static final String ERR_PAT_UPD = "Error occurred in Updating Patient";
+    public static final String ERR_PAT_DOC = "Error occurred in getting Patient's doctors";
 }

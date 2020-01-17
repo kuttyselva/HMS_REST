@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -67,14 +68,15 @@ public class DoctorAPI {
         record.setPhone(phone);
         record.setPassword(password);
         record.setLocation(location);
+        //FIX
         if (doctorDelegate.createDoctor(record)) {
-            message = "created successfully";
-            jsonobject.put("status", ResponseStatus.OK);
+            message = ResponseStatus.CREATE_DOC;
+            jsonobject.put(ResponseStatus.STATUS, ResponseStatus.OK);
         } else {
-            message = "try again";
-            jsonobject.put("status", ResponseStatus.BAD_REQUEST);
+            message = ResponseStatus.USER_NOT_FOUND;
+            jsonobject.put(ResponseStatus.STATUS, ResponseStatus.BAD_REQUEST);
         }
-        jsonobject.put("message", message);
+        jsonobject.put(ResponseStatus.MESSAGE, message);
         LOGGER.traceExit(jsonobject);
         return jsonobject;
 
@@ -101,6 +103,7 @@ public class DoctorAPI {
                                  @FormParam("speciality") String speciality, @FormParam("password") String password) throws SystemException, BusinessException {
         LOGGER.traceEntry(name, age, location, phone, speciality);
         String message;
+        //FIX
         record.setAge(age);
         record.setSpeciality(speciality);
         record.setName(name);
@@ -108,14 +111,15 @@ public class DoctorAPI {
         record.setPassword(password);
         record.setLocation(location);
         record.setId(doctorDelegate.readDoctor(name).getId());
+        //FIX
         if (doctorDelegate.updateDoctor(record)) {
-            message = "updated successfully";
-            jsonobject.put("status", ResponseStatus.OK);
+            message = ResponseStatus.UPDATE_DOC;
+            jsonobject.put(ResponseStatus.STATUS, ResponseStatus.OK);
         } else {
-            message = "try again";
-            jsonobject.put("status", ResponseStatus.BAD_REQUEST);
+            message = ResponseStatus.USER_NOT_FOUND;
+            jsonobject.put(ResponseStatus.STATUS, ResponseStatus.BAD_REQUEST);
         }
-        jsonobject.put("message", message);
+        jsonobject.put(ResponseStatus.MESSAGE, message);
         LOGGER.traceExit(jsonobject);
         return jsonobject;
 
@@ -137,12 +141,12 @@ public class DoctorAPI {
         String message;
         record = doctorDelegate.readDoctor(doctorName);
         if (record != null) {
-            jsonobject.put("status", ResponseStatus.OK);
-            jsonobject.put("message", record);
+            jsonobject.put(ResponseStatus.STATUS, ResponseStatus.OK);
+            jsonobject.put(ResponseStatus.MESSAGE, record);
         } else {
-            message = "user not found";
-            jsonobject.put("status", ResponseStatus.BAD_REQUEST);
-            jsonobject.put("message", message);
+            message = ResponseStatus.USER_NOT_FOUND;
+            jsonobject.put(ResponseStatus.STATUS, ResponseStatus.BAD_REQUEST);
+            jsonobject.put(ResponseStatus.MESSAGE, message);
         }
         LOGGER.traceExit(jsonobject);
         return jsonobject;
@@ -166,12 +170,12 @@ public class DoctorAPI {
         List<PatientRecord> patientRecordList;
         patientRecordList = doctorDelegate.getAllPatients(doctorName);
         if (patientRecordList != null) {
-            jsonobject.put("status", ResponseStatus.OK);
-            jsonobject.put("message", patientRecordList);
+            jsonobject.put(ResponseStatus.STATUS, ResponseStatus.OK);
+            jsonobject.put(ResponseStatus.MESSAGE, patientRecordList);
         } else {
-            message = "user not found";
-            jsonobject.put("status", ResponseStatus.BAD_REQUEST);
-            jsonobject.put("message", message);
+            message = ResponseStatus.USER_NOT_FOUND;
+            jsonobject.put(ResponseStatus.STATUS, ResponseStatus.BAD_REQUEST);
+            jsonobject.put(ResponseStatus.MESSAGE, message);
         }
         LOGGER.traceExit(jsonobject);
         return jsonobject;
@@ -192,9 +196,34 @@ public class DoctorAPI {
     public JSONObject getAllDoctorsPatient() throws BusinessException, SystemException {
         List<DoctorRecord> doctorPatientsLists;
         doctorPatientsLists = doctorDelegate.readAllDoctorsPatientsDelegate();
-        jsonobject.put("status", ResponseStatus.OK);
-        jsonobject.put("message", doctorPatientsLists);
+        jsonobject.put(ResponseStatus.STATUS, ResponseStatus.OK);
+        jsonobject.put(ResponseStatus.MESSAGE, doctorPatientsLists);
         LOGGER.trace(jsonobject);
+        return jsonobject;
+    }
+
+    /**
+     * Delete doctor json object.
+     *
+     * @param doctorID the doctor id
+     * @return the json object
+     * @throws BusinessException the business exception
+     * @throws SystemException   the system exception
+     */
+    @DELETE
+    @Path("/delete/{doctorID}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public JSONObject deleteDoctor(@PathParam("doctorID") int doctorID) throws BusinessException, SystemException {
+        LOGGER.traceEntry(String.valueOf(doctorID));
+        String message;
+        if (doctorDelegate.deleteDoctor(doctorID)) {
+            jsonobject.put(ResponseStatus.STATUS, ResponseStatus.SUCCESS_NO_CONTENT);
+            jsonobject.put(ResponseStatus.MESSAGE, ResponseStatus.DELETE_PAT);
+        } else {
+            message = ResponseStatus.USER_NOT_FOUND;
+            jsonobject.put(ResponseStatus.STATUS, ResponseStatus.BAD_REQUEST);
+            jsonobject.put(ResponseStatus.MESSAGE, message);
+        }
         return jsonobject;
     }
 }

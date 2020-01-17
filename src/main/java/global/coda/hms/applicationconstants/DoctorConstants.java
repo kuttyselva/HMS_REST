@@ -71,4 +71,21 @@ public class DoctorConstants {
 
     public static final String DOCTORS_PATIENTS = "DCPT000Q";
 
+    public static final String DOCTOR_DELETE = "DCDL000Q";
+
+
+    //DAO constants
+
+    public static final String ERR_DOC_CRT = "Error occurred in Creating doctor";
+
+    public static final String ERR_DOC_RED = "Error occurred in Reading doctor";
+    public static final String ERR_DOC_DEL = "Error occurred in Deleting doctor";
+
+    public static final String ERR_DOC_UPD = "Error occurred in Updating doctor";
+    public static final String ERR_DOC_PAT = "Error occurred in getting doctor's patient";
+
+
+    //Delegate constants
+
+
 }

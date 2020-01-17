@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
 import global.coda.hms.applicationconstants.PatientConstants;
 import global.coda.hms.bean.DoctorRecord;
 import global.coda.hms.bean.PatientRecord;
-import global.coda.hms.dao.DatabaseConnection;
+import global.coda.hms.config.DatabaseConnection;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,7 +49,7 @@ public class PatientDao {
      */
     public boolean createPatientRecord(PatientRecord record) throws SQLException {
         LOGGER.traceEntry(record.toString());
-        LOGGER.info(PatientConstant.CREATE_PATIENT);
+
         int result = 0;
         int userid = 0;
         try {
@@ -72,10 +72,12 @@ public class PatientDao {
             result = statement.executeUpdate();
             LOGGER.traceExit();
         } catch (SQLException exception) {
-            LOGGER.error(PatientConstant.ERR_PAT_CRT, exception);
+            LOGGER.error(PatientConstants.ERR_PAT_CRT, exception);
             throw exception;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
+        } finally {
+            connection.close();
         }
         LOGGER.traceExit(result);
         return result > 0;
@@ -89,7 +91,6 @@ public class PatientDao {
      * @throws SQLException the sql exception
      */
     public PatientRecord getPatientRecord(int patientID) throws SQLException {
-        LOGGER.info(PatientConstant.READ_PATIENT);
         LOGGER.traceEntry(String.valueOf(patientID));
         PatientRecord record = null;
         try {
@@ -110,10 +111,12 @@ public class PatientDao {
             return record;
 
         } catch (SQLException exception) {
-            LOGGER.error(PatientConstant.ERR_PAT_RED, exception);
+            LOGGER.error(PatientConstants.ERR_PAT_RED, exception);
             throw exception;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
+        } finally {
+            connection.close();
         }
         LOGGER.traceExit(record);
         return record;
@@ -127,7 +130,6 @@ public class PatientDao {
      * @throws SQLException the sql exception
      */
     public boolean updatePatient(PatientRecord record) throws SQLException {
-        LOGGER.info(PatientConstant.UPDATE_PATIENT);
         LOGGER.traceEntry(record.toString());
         int result = 0;
         try {
@@ -144,51 +146,54 @@ public class PatientDao {
             result = statement.executeUpdate();
             LOGGER.traceExit(result);
         } catch (SQLException exception) {
-            LOGGER.error(PatientConstant.ERR_PAT_UPD, exception);
+            LOGGER.error(PatientConstants.ERR_PAT_UPD, exception);
             throw exception;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
+        } finally {
+            connection.close();
         }
         LOGGER.traceExit(result);
         return result > 0;
 
     }
 
-    /**
-     * View user details list.
-     *
-     * @param branchName of user.
-     * @return list of doc in branch.
-     * @throws SQLException the sql exception
-     */
-    public List<DoctorRecord> viewUserDetails(String branchName) throws SQLException {
-        LOGGER.info(PatientConstant.VIEW_DOCTOR);
-        LOGGER.traceEntry(branchName);
-        List<DoctorRecord> recordists = new ArrayList<>();
-
-        try {
-            PreparedStatement statement = connection
-                    .prepareStatement(SQL_QUERIES.getString(PatientConstants.DOCTOR_IN_BRANCH));
-            statement.setString(PatientConstants.ONE, branchName);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                DoctorRecord record = new DoctorRecord();
-                record.setName(resultSet.getString(PatientConstants.ONE));
-                record.setSpeciality(resultSet.getString(PatientConstants.TWO));
-                record.setLocation(resultSet.getString(PatientConstants.THREE));
-                record.setPhone(resultSet.getString(PatientConstants.FOUR));
-                recordists.add(record);
-            }
-
-        } catch (SQLException exception) {
-            LOGGER.error(PatientConstant.ERR_PAT_RED, exception);
-            throw exception;
-        } catch (Exception exception) {
-            LOGGER.error(exception.getMessage());
-        }
-        LOGGER.traceExit(recordists.toString());
-        return recordists;
-    }
+//    /**
+//     * View user details list.
+//     *
+//     * @param branchName of user.
+//     * @return list of doc in branch.
+//     * @throws SQLException the sql exception
+//     */
+//    public List<DoctorRecord> viewUserDetails(String branchName) throws SQLException {
+//        LOGGER.traceEntry(branchName);
+//        List<DoctorRecord> recordists = new ArrayList<>();
+//
+//        try {
+//            PreparedStatement statement = connection
+//                    .prepareStatement(SQL_QUERIES.getString(PatientConstants.DOCTOR_IN_BRANCH));
+//            statement.setString(PatientConstants.ONE, branchName);
+//            ResultSet resultSet = statement.executeQuery();
+//            while (resultSet.next()) {
+//                DoctorRecord record = new DoctorRecord();
+//                record.setName(resultSet.getString(PatientConstants.ONE));
+//                record.setSpeciality(resultSet.getString(PatientConstants.TWO));
+//                record.setLocation(resultSet.getString(PatientConstants.THREE));
+//                record.setPhone(resultSet.getString(PatientConstants.FOUR));
+//                recordists.add(record);
+//            }
+//
+//        } catch (SQLException exception) {
+//            LOGGER.error(PatientConstants.ERR_PAT_RED, exception);
+//            throw exception;
+//        } catch (Exception exception) {
+//            LOGGER.error(exception.getMessage());
+//        } finally {
+//            connection.close();
+//        }
+//        LOGGER.traceExit(recordists.toString());
+//        return recordists;
+//    }
 
     /**
      * Gets all doctors.
@@ -198,7 +203,7 @@ public class PatientDao {
      * @throws SQLException the sql exception
      */
     public List<DoctorRecord> getAllDoctors(int patientID) throws SQLException {
-        LOGGER.info(PatientConstant.PATIENT_DOCTOR);
+
         LOGGER.traceEntry(String.valueOf(patientID));
         List<DoctorRecord> recordists = new ArrayList<>();
 
@@ -216,10 +221,12 @@ public class PatientDao {
                 recordists.add(record);
             }
         } catch (SQLException exception) {
-            LOGGER.error(PatientConstant.ERR_PAT_DOC, exception);
+            LOGGER.error(PatientConstants.ERR_PAT_DOC, exception);
             throw exception;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
+        } finally {
+            connection.close();
         }
         LOGGER.traceExit(recordists);
         return recordists;
@@ -232,8 +239,9 @@ public class PatientDao {
      * @return the boolean
      * @throws SQLException the sql exception
      */
+    //FIX
     public boolean deletePatient(int PatientID) throws SQLException {
-        LOGGER.info(PatientConstant.READ_PATIENT);
+
         LOGGER.traceEntry(String.valueOf(PatientID));
         try {
             PreparedStatement statement = connection
@@ -245,10 +253,12 @@ public class PatientDao {
             }
             LOGGER.traceExit(result);
         } catch (SQLException exception) {
-            LOGGER.error(PatientConstant.ERR_PAT_RED, exception);
+            LOGGER.error(PatientConstants.ERR_PAT_RED, exception);
             throw exception;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
+        } finally {
+            connection.close();
         }
         return true;
     }

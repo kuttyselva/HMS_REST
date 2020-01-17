@@ -23,7 +23,6 @@ public class PatientHelper {
      * The constant LOCAL_MESSAGES_BUNDLE.
      */
     private PatientDao patientdao = new PatientDao();
-    private List<DoctorRecord> result = null;
 
     /**
      * PatientService constructor.
@@ -42,7 +41,6 @@ public class PatientHelper {
      * @throws SystemException   the system exception
      */
     public boolean createPatient(PatientRecord record) throws BusinessException, SystemException {
-        LOGGER.info(PatientConstant.CREATE_PATIENT);
         LOGGER.traceEntry(record.toString());
         try {
             if (patientdao.createPatientRecord(record)) {
@@ -64,7 +62,6 @@ public class PatientHelper {
      * @throws SystemException   the system exception
      */
     public boolean updateUser(PatientRecord record) throws BusinessException, SystemException {
-        LOGGER.info(PatientConstant.UPDATE_PATIENT);
         LOGGER.traceEntry(record.toString());
         boolean result;
         // update location
@@ -77,7 +74,7 @@ public class PatientHelper {
             throw new BusinessException(ExceptionConstants.ERR_USER_NOT_UPDATE);
         }
         LOGGER.traceExit(record.toString());
-        return result;
+        return true;
     }
 
     /**
@@ -89,7 +86,6 @@ public class PatientHelper {
      * @throws BusinessException the business exception
      */
     public PatientRecord readPatient(int patientID) throws SystemException, BusinessException {
-        LOGGER.info(PatientConstant.READ_PATIENT);
         LOGGER.traceEntry(String.valueOf(patientID));
         PatientRecord patientRecord;
         try {
@@ -104,20 +100,19 @@ public class PatientHelper {
 
     }
 
-    /**
-     * View users list.
-     *
-     * @param branchName to store name of branch.
-     * @return list for successful exe.
-     * @throws SQLException the sql exception
-     */
-    public List<DoctorRecord> viewPatients(String branchName) throws SQLException {
-        LOGGER.info(PatientConstant.READ_PATIENT);
-        LOGGER.traceEntry(branchName);
-        result = new PatientDao().viewUserDetails(branchName);
-        LOGGER.traceExit(result);
-        return result;
-    }
+//    /**
+////     * View users list.
+////     *
+////     * @param branchName to store name of branch.
+////     * @return list for successful exe.
+////     * @throws SQLException the sql exception
+////     */
+////    public List<DoctorRecord> viewPatients(String branchName) throws SQLException {
+////        LOGGER.traceEntry(branchName);
+////        result = new PatientDao().viewUserDetails(branchName);
+////        LOGGER.traceExit(result);
+////        return result;
+////    }
 
     /**
      * Delete patient boolean.
@@ -128,7 +123,6 @@ public class PatientHelper {
      * @throws BusinessException the business exception
      */
     public boolean deletePatient(int patientID) throws SystemException, BusinessException {
-        LOGGER.info(PatientConstant.PATIENT_DELETE);
         LOGGER.traceEntry(String.valueOf(patientID));
         try {
             if (patientdao.deletePatient(patientID)) {
@@ -150,8 +144,8 @@ public class PatientHelper {
      * @throws BusinessException the business exception
      */
     public List<DoctorRecord> getAllDoctors(int patientID) throws SystemException, BusinessException {
-        LOGGER.info(PatientConstant.PATIENT_DOCTOR);
         LOGGER.traceEntry(String.valueOf(patientID));
+        List<DoctorRecord> result;
         try {
             result = patientdao.getAllDoctors(patientID);
         } catch (SQLException e) {

@@ -29,6 +29,7 @@ public class PatientAPI {
     private JSONObject jsonobject = new JSONObject();
     private static final Logger LOGGER = LogManager.getLogger(PatientAPI.class);
     private PatientDelegate patientDelegate = new PatientDelegate();
+    //FIX
     private PatientRecord record = new PatientRecord();
 
     /**
@@ -67,13 +68,13 @@ public class PatientAPI {
         record.setPassword(password);
         record.setLocation(location);
         if (patientDelegate.createPatient(record)) {
-            message = "created successfully";
-            jsonobject.put("status", ResponseStatus.OK);
+            message = ResponseStatus.CREATE_PAT;
+            jsonobject.put(ResponseStatus.STATUS, ResponseStatus.OK);
         } else {
-            message = "try again";
-            jsonobject.put("status", ResponseStatus.BAD_REQUEST);
+            message = ResponseStatus.USER_NOT_FOUND;
+            jsonobject.put(ResponseStatus.STATUS, ResponseStatus.BAD_REQUEST);
         }
-        jsonobject.put("message", message);
+        jsonobject.put(ResponseStatus.MESSAGE, message);
         LOGGER.traceExit(jsonobject);
         return jsonobject;
 
@@ -109,13 +110,13 @@ public class PatientAPI {
         record.setLocation(location);
         record.setId(id);
         if (patientDelegate.updatePatient(record)) {
-            message = "updated successfully";
-            jsonobject.put("status", ResponseStatus.OK);
+            message = ResponseStatus.UPDATE_PAT;
+            jsonobject.put(ResponseStatus.STATUS, ResponseStatus.OK);
         } else {
-            message = "try again";
-            jsonobject.put("status", ResponseStatus.BAD_REQUEST);
+            message = ResponseStatus.USER_NOT_FOUND;
+            jsonobject.put(ResponseStatus.STATUS, ResponseStatus.BAD_REQUEST);
         }
-        jsonobject.put("message", message);
+        jsonobject.put(ResponseStatus.MESSAGE, message);
         LOGGER.traceExit(jsonobject);
         return jsonobject;
 
@@ -140,12 +141,12 @@ public class PatientAPI {
         }
         record = patientDelegate.readPatient(patientID);
         if (record != null) {
-            jsonobject.put("status", ResponseStatus.OK);
-            jsonobject.put("message", record);
+            jsonobject.put(ResponseStatus.STATUS, ResponseStatus.OK);
+            jsonobject.put(ResponseStatus.MESSAGE, record);
         } else {
-            message = "user not found";
-            jsonobject.put("status", ResponseStatus.BAD_REQUEST);
-            jsonobject.put("message", message);
+            message = ResponseStatus.USER_NOT_FOUND;
+            jsonobject.put(ResponseStatus.STATUS, ResponseStatus.BAD_REQUEST);
+            jsonobject.put(ResponseStatus.MESSAGE, message);
         }
         LOGGER.traceExit(jsonobject);
         return jsonobject;
@@ -169,12 +170,12 @@ public class PatientAPI {
         List<DoctorRecord> doctorRecordList;
         doctorRecordList = patientDelegate.PatientDoctors(patientID);
         if (doctorRecordList != null) {
-            jsonobject.put("status", ResponseStatus.OK);
-            jsonobject.put("message", doctorRecordList);
+            jsonobject.put(ResponseStatus.STATUS, ResponseStatus.OK);
+            jsonobject.put(ResponseStatus.MESSAGE, doctorRecordList);
         } else {
-            message = "user not found";
-            jsonobject.put("status", ResponseStatus.BAD_REQUEST);
-            jsonobject.put("message", message);
+            message = ResponseStatus.USER_NOT_FOUND;
+            jsonobject.put(ResponseStatus.STATUS, ResponseStatus.BAD_REQUEST);
+            jsonobject.put(ResponseStatus.MESSAGE, message);
         }
         LOGGER.traceExit(jsonobject);
         return jsonobject;
@@ -195,12 +196,12 @@ public class PatientAPI {
         LOGGER.traceEntry(String.valueOf(patientID));
         String message;
         if (patientDelegate.deletePatient(patientID)) {
-            jsonobject.put("status", ResponseStatus.OK);
-            jsonobject.put("message", String.format("deleted %d", patientID));
+            jsonobject.put(ResponseStatus.STATUS, ResponseStatus.SUCCESS_NO_CONTENT);
+            jsonobject.put(ResponseStatus.MESSAGE, ResponseStatus.DELETE_PAT);
         } else {
-            message = "user not found";
-            jsonobject.put("status", ResponseStatus.BAD_REQUEST);
-            jsonobject.put("message", message);
+            message = ResponseStatus.USER_NOT_FOUND;
+            jsonobject.put(ResponseStatus.STATUS, ResponseStatus.BAD_REQUEST);
+            jsonobject.put(ResponseStatus.MESSAGE, message);
         }
         return jsonobject;
     }

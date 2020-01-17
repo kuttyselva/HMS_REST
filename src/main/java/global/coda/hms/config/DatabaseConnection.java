@@ -1,4 +1,4 @@
-package global.coda.hms.dao;
+package global.coda.hms.config;
 
 
 import java.sql.Connection;

@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
 import global.coda.hms.applicationconstants.DoctorConstants;
 import global.coda.hms.bean.DoctorRecord;
 import global.coda.hms.bean.PatientRecord;
-import global.coda.hms.dao.DatabaseConnection;
+import global.coda.hms.config.DatabaseConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,7 +60,6 @@ public class DoctorDao {
      */
     public boolean createDoctorRecord(DoctorRecord record) throws SQLException {
         LOGGER.traceEntry(record.toString());
-        LOGGER.info(DoctorConstant.CREATE_DOCTOR);
         int result = 0;
         int userid = 0;
         try {
@@ -82,7 +81,7 @@ public class DoctorDao {
             statement.setInt(DoctorConstants.TWO, userid);
             result = statement.executeUpdate();
         } catch (SQLException exception) {
-            LOGGER.error(DoctorConstant.ERR_DOC_CRT, exception);
+            LOGGER.error(DoctorConstants.ERR_DOC_CRT, exception);
             throw exception;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
@@ -105,7 +104,6 @@ public class DoctorDao {
      */
     public DoctorRecord getDoctorRecord(String doctorName) throws SQLException {
         LOGGER.traceEntry(doctorName);
-        LOGGER.info(DoctorConstant.READ_DOCTOR);
         DoctorRecord record = null;
         try {
             record = new DoctorRecord();
@@ -123,10 +121,12 @@ public class DoctorDao {
             return record;
 
         } catch (SQLException exception) {
-            LOGGER.error(DoctorConstant.ERR_DOC_RED, exception);
+            LOGGER.error(DoctorConstants.ERR_DOC_RED, exception);
             throw exception;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
+        } finally {
+            connection.close();
         }
         LOGGER.traceExit(record);
         return record;
@@ -146,7 +146,6 @@ public class DoctorDao {
      */
     public boolean updateDoctor(DoctorRecord record) throws SQLException {
         LOGGER.traceEntry(record.toString());
-        LOGGER.info(DoctorConstant.UPDATE_DOCTOR);
         int result = 0;
         try {
             PreparedStatement statement = connection.prepareStatement(QUERIES.getString(DoctorConstants.DOCTOR_UPDATE));
@@ -160,10 +159,12 @@ public class DoctorDao {
             statement.setInt(DoctorConstants.TWO, record.getId());
             result = statement.executeUpdate();
         } catch (SQLException exception) {
-            LOGGER.error(DoctorConstant.ERR_DOC_UPD, exception);
+            LOGGER.error(DoctorConstants.ERR_DOC_UPD, exception);
             throw exception;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
+        } finally {
+            connection.close();
         }
         LOGGER.traceExit(result);
         return result > 0;
@@ -183,7 +184,6 @@ public class DoctorDao {
 //     */
 //    public List<PatientRecord> viewDoctorDetails(String branchName) throws SQLException {
 //        LOGGER.traceEntry(branchName);
-//        LOGGER.info(DoctorConstant.VIEW_PATIENT);
 //        List<PatientRecord> recordlist = new ArrayList<>();
 //        try {
 //            PreparedStatement statement = connection
@@ -199,7 +199,7 @@ public class DoctorDao {
 //            }
 //
 //        } catch (SQLException exception) {
-//            LOGGER.error(DoctorConstant.ERR_DOC_RED, exception);
+//            LOGGER.error(DoctorConstants.ERR_DOC_RED, exception);
 //            throw exception;
 //        } catch (Exception exception) {
 //            LOGGER.error(exception.getMessage());
@@ -217,7 +217,6 @@ public class DoctorDao {
      */
     public List<PatientRecord> getAllPatients(String doctorName) throws SQLException {
         LOGGER.traceEntry(doctorName);
-        LOGGER.info(DoctorConstant.DOCTOR_PATIENT);
         List<PatientRecord> recordists = new ArrayList<>();
 
         try {
@@ -235,10 +234,12 @@ public class DoctorDao {
             }
 
         } catch (SQLException exception) {
-            LOGGER.error(DoctorConstant.ERR_DOC_PAT, exception);
+            LOGGER.error(DoctorConstants.ERR_DOC_PAT, exception);
             throw exception;
         } catch (Exception exception) {
             LOGGER.error(exception.getMessage());
+        } finally {
+            connection.close();
         }
         LOGGER.traceExit(recordists);
         return recordists;
@@ -252,7 +253,6 @@ public class DoctorDao {
      * @throws SQLException the sql exception
      */
     public Map<Integer, DoctorRecord> readAllDoctorsPatients() throws SQLException {
-        LOGGER.info(DoctorConstant.DOCTORS_PATIENT);
         Map<Integer, DoctorRecord> doctorMap = new HashMap<>();
         PreparedStatement statement = connection.prepareStatement(SQL_QUERIES.getString(DoctorConstants.DOCTORS_PATIENTS));
         ResultSet resultSet = statement.executeQuery();
@@ -280,8 +280,38 @@ public class DoctorDao {
             }
             LOGGER.trace(doctorMap);
         }
-
-
+        connection.close();
         return doctorMap;
+    }
+
+    /**
+     * Delete patient boolean.
+     *
+     * @param DoctorID the doctor id
+     * @return the boolean
+     * @throws SQLException the sql exception
+     */
+//FIX
+    public boolean deleteDoctor(int DoctorID) throws SQLException {
+
+        LOGGER.traceEntry(String.valueOf(DoctorID));
+        try {
+            PreparedStatement statement = connection
+                    .prepareStatement(SQL_QUERIES.getString(DoctorConstants.DOCTOR_DELETE));
+            statement.setInt(DoctorConstants.ONE, DoctorID);
+            int result = statement.executeUpdate();
+            if (result < 1) {
+                return false;
+            }
+            LOGGER.traceExit(result);
+        } catch (SQLException exception) {
+            LOGGER.error(DoctorConstants.ERR_DOC_DEL, exception);
+            throw exception;
+        } catch (Exception exception) {
+            LOGGER.error(exception.getMessage());
+        } finally {
+            connection.close();
+        }
+        return true;
     }
 }

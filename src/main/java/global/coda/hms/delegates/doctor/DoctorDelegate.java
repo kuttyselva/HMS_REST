@@ -1,8 +1,8 @@
 package global.coda.hms.delegates.doctor;
 
+import global.coda.hms.applicationconstants.ExceptionConstants;
 import global.coda.hms.bean.DoctorRecord;
 import global.coda.hms.bean.PatientRecord;
-import global.coda.hms.delegates.patient.PatientConstants;
 import global.coda.hms.exceptionmappers.BusinessException;
 import global.coda.hms.exceptionmappers.SystemException;
 import global.coda.hms.helpers.doctor.DoctorHelper;
@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,12 +39,12 @@ public class DoctorDelegate {
      * @throws BusinessException the business exception
      */
     public boolean createDoctor(DoctorRecord record) throws SystemException, BusinessException {
-        LOGGER.info(DoctorConstants.CREATE_DOCTOR);
-        try {
-            return doctorHelper.createDoctor(record);
-        } catch (SQLException exception) {
-            throw new SystemException();
+        if (doctorHelper.createDoctor(record)) {
+            return true;
+        } else {
+            throw new BusinessException(ExceptionConstants.ERR_USER_NOT_CREATE);
         }
+
     }
 
     /**
@@ -57,9 +56,12 @@ public class DoctorDelegate {
      * @throws SystemException   the system exception
      */
     public boolean updateDoctor(DoctorRecord record) throws BusinessException, SystemException {
-        LOGGER.info(DoctorConstants.CREATE_DOCTOR);
         try {
-            return doctorHelper.updateDoctor(record);
+            if (doctorHelper.updateDoctor(record)) {
+                return true;
+            } else {
+                throw new BusinessException(ExceptionConstants.ERR_USER_NOT_UPDATE);
+            }
         } catch (SQLException exception) {
             throw new SystemException();
         }
@@ -77,12 +79,7 @@ public class DoctorDelegate {
         if (doctorName.length() < 2) {
             throw new BusinessException();
         }
-        LOGGER.info(DoctorConstants.READ_DOCTOR);
-        try {
-            return doctorHelper.readDoctor(doctorName);
-        } catch (SQLException e) {
-            throw new SystemException();
-        }
+        return doctorHelper.readDoctor(doctorName);
     }
 
 //    /**
@@ -108,15 +105,11 @@ public class DoctorDelegate {
      * @throws SystemException   the system exception
      */
     public List<PatientRecord> getAllPatients(String doctorName) throws BusinessException, SystemException {
-        LOGGER.info(PatientConstants.PATIENT_DOCTOR);
+        LOGGER.traceEntry(doctorName);
         if (doctorName.length() < 1) {
-            throw new BusinessException();
+            throw new BusinessException(ExceptionConstants.ERR_USER_NOT_FOUND);
         }
-        try {
-            return doctorHelper.getAllPatients(doctorName);
-        } catch (SQLException e) {
-            throw new SystemException();
-        }
+        return doctorHelper.getAllPatients(doctorName);
     }
 
     /**
@@ -128,8 +121,11 @@ public class DoctorDelegate {
      */
     public List<DoctorRecord> readAllDoctorsPatientsDelegate() throws BusinessException, SystemException {
 
-        Map<Integer, DoctorRecord> doctorMap = new HashMap<Integer, DoctorRecord>();
+        Map<Integer, DoctorRecord> doctorMap;
         doctorMap = doctorHelper.readAllDoctorsPatientsHelper();
+        if (doctorMap.isEmpty()) {
+            throw new BusinessException(ExceptionConstants.ERR_USER_NOT_FOUND);
+        }
         List<DoctorRecord> doctorList = new ArrayList<>();
         for (Map.Entry<Integer, DoctorRecord> doctor : doctorMap.entrySet()) {
 
@@ -139,6 +135,25 @@ public class DoctorDelegate {
 
 
         return doctorList;
+    }
+
+
+    /**
+     * Delete patient boolean.
+     *
+     * @param doctorID the doctor id
+     * @return the boolean
+     * @throws SystemException   the system exception
+     * @throws BusinessException the business exception
+     */
+    public boolean deleteDoctor(int doctorID) throws SystemException, BusinessException {
+        LOGGER.traceEntry(String.valueOf(doctorID));
+        if (doctorID == -1) {
+            throw new BusinessException(ExceptionConstants.ERR_USER_NOT_FOUND);
+        }
+        boolean result = doctorHelper.deleteDoctor(doctorID);
+        LOGGER.traceExit(result);
+        return result;
     }
 
 

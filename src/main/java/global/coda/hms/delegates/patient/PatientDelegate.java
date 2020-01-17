@@ -18,6 +18,7 @@ import java.util.List;
 public class PatientDelegate {
     private final PatientHelper patientHelper = new PatientHelper();
     private static final Logger LOGGER = LogManager.getLogger(PatientDelegate.class);
+    private static boolean result = false;
 
     /**
      * Instantiates a new Patient delegate.
@@ -37,8 +38,9 @@ public class PatientDelegate {
      * @throws BusinessException the business exception
      */
     public boolean createPatient(PatientRecord record) throws SystemException, BusinessException {
-        LOGGER.info(PatientConstants.CREATE_PATIENT);
-        return patientHelper.createPatient(record);
+        LOGGER.traceEntry(record.toString());
+        result = patientHelper.createPatient(record);
+        return result;
     }
 
     /**
@@ -50,12 +52,14 @@ public class PatientDelegate {
      * @throws BusinessException the business exception
      */
     public boolean updatePatient(PatientRecord record) throws SystemException, BusinessException {
-        LOGGER.info(PatientConstants.UPDATE_PATIENT);
+        LOGGER.traceEntry(record.toString());
         if (patientHelper.updateUser(record)) {
-            return true;
+            result = true;
         } else {
-            throw new BusinessException(PatientConstants.ERR_UPD_PAT);
+            throw new BusinessException(ExceptionConstants.ERR_USER_NOT_DELETE);
         }
+        LOGGER.traceExit(true);
+        return result;
     }
 
     /**
@@ -67,11 +71,13 @@ public class PatientDelegate {
      * @throws BusinessException the business exception
      */
     public PatientRecord readPatient(int patientID) throws SystemException, BusinessException {
+        LOGGER.traceEntry(String.valueOf(patientID));
         if (patientID == -1) {
             throw new BusinessException(ExceptionConstants.ERR_USER_NOT_FOUND);
         }
-        LOGGER.info(PatientConstants.READ_PATIENT);
-        return patientHelper.readPatient(patientID);
+        PatientRecord patientRecord = patientHelper.readPatient(patientID);
+        LOGGER.traceExit(patientRecord);
+        return patientRecord;
     }
 
     /**
@@ -83,11 +89,13 @@ public class PatientDelegate {
      * @throws BusinessException the business exception
      */
     public boolean deletePatient(int patientID) throws SystemException, BusinessException {
+        LOGGER.traceEntry(String.valueOf(patientID));
         if (patientID == -1) {
             throw new BusinessException(ExceptionConstants.ERR_USER_NOT_FOUND);
         }
-        LOGGER.info(PatientConstants.READ_PATIENT);
-        return patientHelper.deletePatient(patientID);
+        result = patientHelper.deletePatient(patientID);
+        LOGGER.traceExit(result);
+        return result;
     }
 
     /**
@@ -99,10 +107,11 @@ public class PatientDelegate {
      * @throws BusinessException the business exception
      */
     public List<DoctorRecord> PatientDoctors(int patientID) throws SystemException, BusinessException {
-        LOGGER.info(PatientConstants.PATIENT_DOCTOR);
+        LOGGER.traceEntry(String.valueOf(patientID));
         if (patientID == -1) {
             throw new BusinessException(ExceptionConstants.ERR_USER_NOT_FOUND);
         }
+        LOGGER.traceExit(patientID);
         return patientHelper.getAllDoctors(patientID);
     }
 }
